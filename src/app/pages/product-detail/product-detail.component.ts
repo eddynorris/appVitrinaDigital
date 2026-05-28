@@ -20,7 +20,7 @@ import {
     LucideAlertCircle
   ],
   template: `
-    <div class="detail-page">
+    <div class="detail-page container">
       <div class="back-navigation">
         <a routerLink="/catalogo" class="btn-back">
           <svg lucideArrowLeft></svg>

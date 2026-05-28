@@ -34,7 +34,7 @@ import {
     LucideAlertCircle
   ],
   template: `
-    <div class="dashboard-page">
+    <div class="dashboard-page container">
       <!-- ALERTA DE PERFIL INCOMPLETO -->
       @if (user() && !user()?.institucion_id) {
         <div class="warning-banner glass-panel animate-fade-in">

@@ -29,7 +29,7 @@ import {
     LucideKey
   ],
   template: `
-    <div class="profile-page">
+    <div class="profile-page container">
       <div class="back-navigation">
         <a routerLink="/dashboard" class="btn-back">
           <svg lucideArrowLeft></svg>

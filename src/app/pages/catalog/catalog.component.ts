@@ -34,7 +34,7 @@ import {
     LucideFilter
   ],
   template: `
-    <div class="catalog-page-container">
+    <div class="catalog-page-container container">
       <!-- Fondo dinámico con orbes brillantes -->
       <div class="glow-spot spot-amber"></div>
       <div class="glow-spot spot-salvia"></div>

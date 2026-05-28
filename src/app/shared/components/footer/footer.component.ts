@@ -7,10 +7,9 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
       <div class="container footer-container">
         <div class="footer-left">
           <p class="footer-title">Vitrina Digital Escolar</p>
-          <p class="footer-subtitle">Municipalidad de La Victoria & Instituciones Educativas Unidas</p>
         </div>
         <div class="footer-right">
-          <p class="footer-copy">&copy; {{ anioActual }} Vitrina Victoria. Todos los derechos reservados.</p>
+          <p class="footer-copy">&copy; {{ anioActual }} Vitrina Digital La Victoria. Todos los derechos reservados.</p>
           <p class="footer-tagline">Impulsando el emprendimiento de nuestras estudiantes.</p>
         </div>
       </div>

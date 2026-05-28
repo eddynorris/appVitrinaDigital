@@ -2,21 +2,21 @@ import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@ang
 import { RouterLink } from '@angular/router';
 import { SupabaseService, Producto } from '../../core/services/supabase.service';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
-import { 
-  LucideArrowRight, 
-  LucideSparkles, 
-  LucideAward, 
-  LucideQuote 
+import {
+  LucideArrowRight,
+  LucideSparkles,
+  LucideAward,
+  LucideQuote
 } from '@lucide/angular';
 
 @Component({
   selector: 'app-home',
   imports: [
-    RouterLink, 
-    ProductCardComponent, 
-    LucideArrowRight, 
-    LucideSparkles, 
-    LucideAward, 
+    RouterLink,
+    ProductCardComponent,
+    LucideArrowRight,
+    LucideSparkles,
+    LucideAward,
     LucideQuote
   ],
   template: `
@@ -86,7 +86,7 @@ import {
         </div>
       </section>
 
-      <!-- 3. SECCIÓN CREADOR / PROYECTO DESTACADO (Formato Editorial de Revista) -->
+      <!-- 3. SECCIÓN CREADOR / PROYECTO DESTACADO (Formato Editorial de Revista)
       <section class="section creator-showcase bg-cream-latte">
         <div class="container">
           <div class="creator-grid glass-panel">
@@ -112,6 +112,7 @@ import {
           </div>
         </div>
       </section>
+      -->
 
       <!-- 4. COLECCIÓN DESTACADA (Dinámica desde Supabase) -->
       <section class="section home-featured bg-alt">

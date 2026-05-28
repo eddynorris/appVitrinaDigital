@@ -35,7 +35,7 @@ import {
     LucideMail
   ],
   template: `
-    <div class="instituciones-page">
+    <div class="instituciones-page container">
       <!-- Navegación y Encabezado -->
       <div class="back-navigation">
         <a routerLink="/dashboard" class="btn-back">
