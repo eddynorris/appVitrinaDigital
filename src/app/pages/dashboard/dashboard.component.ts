@@ -1,0 +1,1041 @@
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CurrencyPipe } from '@angular/common';
+import { AuthService, Perfil } from '../../core/services/auth.service';
+import { SupabaseService, Producto, Categoria } from '../../core/services/supabase.service';
+import { ImageService } from '../../core/services/image.service';
+import { 
+  LucidePlus, 
+  LucideUpload, 
+  LucidePencil, 
+  LucideTrash2, 
+  LucideFileText, 
+  LucideCamera, 
+  LucideSparkles, 
+  LucideCopy,
+  LucideAlertCircle
+} from '@lucide/angular';
+
+@Component({
+  selector: 'app-dashboard',
+  imports: [
+    ReactiveFormsModule, 
+    CurrencyPipe,
+    RouterLink,
+    LucidePlus,
+    LucideUpload,
+    LucidePencil,
+    LucideTrash2,
+    LucideFileText,
+    LucideCamera,
+    LucideSparkles,
+    LucideCopy,
+    LucideAlertCircle
+  ],
+  template: `
+    <div class="dashboard-page">
+      <!-- ALERTA DE PERFIL INCOMPLETO -->
+      @if (user() && !user()?.institucion_id) {
+        <div class="warning-banner glass-panel animate-fade-in">
+          <svg lucideAlertCircle class="warning-icon"></svg>
+          <div class="warning-content">
+            <h4>¡Perfil Incompleto!</h4>
+            <p>Para poder publicar productos en la vitrina, debes seleccionar tu institución educativa y confirmar tu rol en tu perfil.</p>
+          </div>
+          <a routerLink="/perfil" class="btn btn-primary btn-sm">Completar Perfil</a>
+        </div>
+      }
+
+      <!-- Encabezado del Panel -->
+      <header class="dashboard-header glass-panel">
+        <div class="header-user-info">
+          <h2>Panel de Administración</h2>
+          <p>Bienvenido, <strong>{{ user()?.nombre_completo }}</strong> • {{ user()?.instituciones?.nombre || 'General' }}</p>
+        </div>
+        <div class="header-actions" style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+          @if (user()?.rol === 'admin') {
+            <a routerLink="/dashboard/instituciones" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+              Gestionar Colegios
+            </a>
+          }
+          @if (!isFormOpen()) {
+            <button 
+              class="btn btn-primary" 
+              (click)="openCreateForm()"
+              [disabled]="!user()?.institucion_id"
+            >
+              <svg lucidePlus [size]="16"></svg>
+              Nuevo Producto
+            </button>
+          } @else {
+            <button class="btn btn-secondary" (click)="closeForm()">
+              Volver al Listado
+            </button>
+          }
+        </div>
+      </header>
+
+      <div class="dashboard-layout">
+        <!-- ÁREA CENTRAL: FORMULARIO O TABLA DE PRODUCTOS -->
+        <main class="dashboard-main">
+          @if (isFormOpen()) {
+            <!-- Formulario de Producto -->
+            <div class="form-container glass-panel">
+              <h3>{{ isEditing() ? 'Editar' : 'Añadir' }} Producto</h3>
+              
+              <form [formGroup]="productForm" (ngSubmit)="saveProduct()" class="product-form">
+                <div class="form-row">
+                  <div class="form-group flex-2">
+                    <label class="form-label" for="nombre">Nombre del Producto</label>
+                    <input id="nombre" type="text" class="form-input" formControlName="nombre" placeholder="Ej. Jarra de Cerámica Pintada" />
+                  </div>
+                  
+                  <div class="form-group flex-1">
+                    <label class="form-label" for="precio">Precio (S/.)</label>
+                    <input id="precio" type="number" step="0.10" class="form-input" formControlName="precio" placeholder="0.00" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group flex-1">
+                    <label class="form-label" for="categoria">Categoría</label>
+                    <select id="categoria" class="form-input" formControlName="categoria_id">
+                      <option value="">Selecciona una categoría</option>
+                      @for (cat of categories(); track cat.id) {
+                        <option [value]="cat.id">{{ cat.nombre }}</option>
+                      }
+                    </select>
+                  </div>
+
+                  <div class="form-group flex-1">
+                    <label class="form-label" for="estado">Estado de Publicación</label>
+                    <select id="estado" class="form-input" formControlName="estado">
+                      <option value="publicado">Publicado (Visible en catálogo)</option>
+                      <option value="borrador">Borrador (Privado)</option>
+                      <option value="pausado">Pausado (Sin opción de compra)</option>
+                      <option value="vendido">Vendido</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="descripcion">Descripción</label>
+                  <textarea id="descripcion" rows="4" class="form-input" formControlName="descripcion" placeholder="Describe los materiales, dimensiones y el taller donde se fabricó el producto..."></textarea>
+                </div>
+
+                <!-- Subida de imágenes/videos con Compresión del Cliente -->
+                <div class="form-group">
+                  <label class="form-label">Fotos o Videos del Producto</label>
+                  <div 
+                    class="drag-drop-area"
+                    (dragover)="onDragOver($event)"
+                    (drop)="onDrop($event)"
+                    (click)="fileInput.click()"
+                  >
+                    <input 
+                      #fileInput 
+                      type="file" 
+                      multiple 
+                      accept="image/*,video/*" 
+                      style="display: none" 
+                      (change)="onFileSelected($event)"
+                    />
+                    <svg lucideUpload class="upload-icon"></svg>
+                    <p class="upload-title">Arrastra tus fotos o videos aquí o haz clic para buscar</p>
+                    <p class="upload-subtitle">Las imágenes se optimizan automáticamente. Los videos deben pesar menos de 15MB (MP4/WebM).</p>
+                  </div>
+
+                  @if (uploadingImage()) {
+                    <div class="upload-progress">
+                      <div class="spinner-sm"></div>
+                      Comprimiendo y subiendo imagen...
+                    </div>
+                  }
+
+                  <!-- Previsualización de imágenes/videos subidas -->
+                  @if (uploadedImages().length > 0) {
+                    <div class="preview-grid">
+                      @for (img of uploadedImages(); track img; let idx = $index) {
+                        <div class="preview-item">
+                          @if (isVideo(img)) {
+                            <video [src]="img" class="table-thumb" style="width: 100%; height: 100%; object-fit: cover;" autoplay muted loop playsinline></video>
+                          } @else {
+                            <img [src]="img" alt="Vista previa del producto" />
+                          }
+                          <button type="button" class="btn-remove-img" (click)="removeImage(idx)">
+                            &times;
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="form-actions">
+                  <button type="button" class="btn btn-secondary" (click)="closeForm()" [disabled]="saving()">
+                    Cancelar
+                  </button>
+                  <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid || uploadedImages().length === 0 || saving()">
+                    @if (saving()) {
+                      Guardando...
+                    } @else {
+                      Guardar Producto
+                    }
+                  </button>
+                </div>
+              </form>
+            </div>
+          } @else {
+            <!-- Listado de Productos -->
+            <div class="table-container glass-panel">
+              <div class="table-header">
+                <h3>Mis Productos Publicados</h3>
+              </div>
+
+              @if (loadingProducts()) {
+                <div class="table-loader">
+                  <div class="loader"></div>
+                  <p>Cargando productos...</p>
+                </div>
+              } @else if (myProducts().length === 0) {
+                <div class="table-empty">
+                  <svg lucideFileText></svg>
+                  <p>Aún no has registrado ningún producto. ¡Presiona "Nuevo Producto" para empezar!</p>
+                </div>
+              } @else {
+                <div class="table-scroll">
+                  <table class="products-table">
+                    <thead>
+                      <tr>
+                        <th>Foto</th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Precio</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (prod of myProducts(); track prod.id) {
+                        <tr>
+                          <td>
+                            @if (isVideo(prod.imagenes[0])) {
+                              <video [src]="prod.imagenes[0]" class="table-thumb" style="width: 48px; height: 48px; object-fit: cover;" autoplay muted loop playsinline></video>
+                            } @else {
+                              <img [src]="prod.imagenes[0]" alt="Producto" class="table-thumb" />
+                            }
+                          </td>
+                          <td class="table-name-cell">
+                            <strong>{{ prod.nombre }}</strong>
+                          </td>
+                          <td>{{ prod.categorias?.nombre }}</td>
+                          <td>{{ prod.precio | currency:'PEN':'S/. ' }}</td>
+                          <td>
+                            <span class="status-pill" [class]="prod.estado">
+                              {{ prod.estado === 'publicado' ? 'Publicado' : (prod.estado === 'borrador' ? 'Borrador' : (prod.estado === 'pausado' ? 'Pausado' : 'Vendido')) }}
+                            </span>
+                          </td>
+                          <td>
+                            <div class="table-actions">
+                              <button class="btn-action-edit" (click)="openEditForm(prod)" title="Editar">
+                                <svg lucidePencil [size]="16"></svg>
+                              </button>
+                              <button class="btn-action-delete" (click)="deleteProduct(prod.id!)" title="Eliminar">
+                                <svg lucideTrash2 [size]="16"></svg>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              }
+            </div>
+          }
+        </main>
+
+        <!-- PANEL LATERAL: ASISTENCIA IA & CONSEJOS DE FOTOGRAFÍA -->
+        <aside class="dashboard-sidebar">
+          <!-- Widget Asistente de Fotos con IA -->
+          <div class="sidebar-widget glass-panel success-border">
+            <div class="widget-header">
+              <svg lucideCamera [size]="20" class="widget-icon" style="color: var(--success-color);"></svg>
+              <h4>Asistente de Fotos con IA</h4>
+            </div>
+            <p class="widget-text">
+              Modelos gratuitos de frontera con enlaces directos para optimizar o generar tus fotos escolares:
+            </p>
+            <div class="ai-links">
+              <a href="https://gemini.google.com" target="_blank" class="ai-link-btn" title="Chat de Gemini">
+                <span class="ai-icon">🍌</span> Gemini Chat
+              </a>
+              <a href="https://aistudio.google.com" target="_blank" class="ai-link-btn" title="Google AI Studio (Gratis)">
+                <span class="ai-icon">⚡</span> AI Studio (Flash)
+              </a>
+              <a href="https://chat.qwenlm.ai" target="_blank" class="ai-link-btn" title="Chat de Qwen AI">
+                <span class="ai-icon">🤖</span> Qwen Chat
+              </a>
+              <a href="https://huggingface.co/spaces/Tongyi-MAI/Z-Image-Turbo" target="_blank" class="ai-link-btn" title="Z-Image Turbo (Gratis)">
+                <span class="ai-icon">🎨</span> Z-Image (Turbo)
+              </a>
+              <a href="https://huggingface.co/spaces/black-forest-labs/FLUX.1-schnell" target="_blank" class="ai-link-btn" title="FLUX.1 Schnell">
+                <span class="ai-icon">🔥</span> FLUX.1 Schnell
+              </a>
+            </div>
+            <hr class="widget-divider">
+            <div class="prompt-selector-wrapper">
+              <label class="form-label" style="font-size: 0.75rem;">Estilo de Prompt de Foto:</label>
+              <select class="form-input" style="font-size: 0.8rem; padding: 0.4rem; height: auto;" (change)="onPromptStyleChange($event)">
+                <option value="estudio">Fondo de Estudio Minimalista</option>
+                <option value="organico">Bodegón Orgánico (Postres/Plantas)</option>
+                <option value="catalogo">Catálogo Moderno (Textiles/Bisutería)</option>
+                <option value="flatlay">Vista Cenital (Flat Lay) Creativo</option>
+                <option value="rustico">Estilo Rústico y Tradicional</option>
+                <option value="macro">Macrofotografía (Detalle y Textura)</option>
+                <option value="iluminacion">Bodegón con Luz Dramática</option>
+              </select>
+            </div>
+            <div class="prompt-box">
+              <code>{{ activeImagePrompt() }}</code>
+            </div>
+            <button class="btn btn-glass btn-copy-prompt" (click)="copyImagePrompt()">
+              <svg lucideCopy [size]="14" style="margin-right: 0.35rem; display: inline-block; vertical-align: middle;"></svg>
+              Copiar Prompt Elegido
+            </button>
+            @if (imagePromptCopied()) {
+              <span class="copy-alert">¡Copiado al portapapeles!</span>
+            }
+          </div>
+
+          <!-- Widget de Asistencia en Prompts (Gemini) -->
+          <div class="sidebar-widget glass-panel primary-border">
+            <div class="widget-header">
+              <svg lucideSparkles [size]="20" class="widget-icon" style="color: var(--primary-color);"></svg>
+              <h4>Asistente de Redacción (Gemini)</h4>
+            </div>
+            <p class="widget-text">
+              ¿No sabes qué escribir en la descripción? Copia este prompt, pégalo en Gemini y adáptalo con los datos de tu producto:
+            </p>
+            <div class="prompt-box">
+              <code>
+                "Escribe una descripción comercial y sumamente atractiva para la tienda escolar sobre un producto llamado [Nombre]. Está hecho a mano de [Material] por estudiantes del colegio [Tu Colegio]. Resalta su utilidad, textura y acabado. Keep it simple, 2 párrafos cortos."
+              </code>
+            </div>
+            <button class="btn btn-glass btn-copy-prompt" (click)="copyPrompt()">
+              <svg lucideCopy [size]="14" style="margin-right: 0.35rem; display: inline-block; vertical-align: middle;"></svg>
+              Copiar Prompt
+            </button>
+            @if (promptCopied()) {
+              <span class="copy-alert">¡Copiado al portapapeles!</span>
+            }
+          </div>
+        </aside>
+      </div>
+    </div>
+  `,
+  styles: [`
+    .dashboard-page {
+      padding-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Header */
+    .dashboard-header {
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .header-user-info h2 {
+      font-size: 1.5rem;
+    }
+    .header-user-info p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Layout */
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    /* Formulario */
+    .form-container {
+      padding: 2rem;
+    }
+    .form-container h3 {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 0.5rem;
+    }
+    .product-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .form-row {
+      display: flex;
+      gap: 1rem;
+    }
+    .flex-1 { flex: 1; }
+    .flex-2 { flex: 2; }
+    
+    /* Drag & Drop */
+    .drag-drop-area {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      background: var(--bg-tertiary);
+      transition: all var(--transition-fast);
+    }
+    .drag-drop-area:hover {
+      border-color: var(--primary-color);
+      background: var(--primary-light);
+    }
+    .upload-icon {
+      width: 32px;
+      height: 32px;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .upload-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .upload-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    .upload-progress {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--primary-color);
+      margin-top: 0.5rem;
+    }
+    .spinner-sm {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(99, 57, 27, 0.2);
+      border-top-color: var(--primary-color);
+      border-radius: 50%;
+      animation: spin 0.6s infinite linear;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .preview-item {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    .preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .btn-remove-img {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: rgba(239, 68, 68, 0.85);
+      color: white;
+      border: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .btn-remove-img:hover {
+      background: rgb(239, 68, 68);
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      border-top: 1px solid var(--border-light);
+      padding-top: 1.25rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Tabla */
+    .table-container {
+      padding: 1.5rem;
+    }
+    .table-header {
+      margin-bottom: 1.25rem;
+    }
+    .table-loader, .table-empty {
+      padding: 3rem 1rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      color: var(--text-secondary);
+    }
+    .table-empty svg {
+      width: 40px;
+      height: 40px;
+      color: var(--text-muted);
+    }
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+    }
+    .products-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .products-table th, .products-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 0.9rem;
+    }
+    .products-table th {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--bg-tertiary);
+    }
+    .table-thumb {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+    .table-name-cell {
+      color: var(--text-primary);
+    }
+    .status-pill {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+    }
+    .status-pill.publicado {
+      background: var(--success-light);
+      color: var(--success-color);
+    }
+    .status-pill.borrador {
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+    .status-pill.pausado {
+      background: #fef3c7;
+      color: #d97706;
+    }
+    .status-pill.vendido {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+    
+    .table-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .table-actions button {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .table-actions button:hover {
+      background: var(--bg-tertiary);
+    }
+    .btn-action-edit:hover {
+      color: var(--primary-color) !important;
+      border-color: var(--primary-color) !important;
+    }
+    .btn-action-delete:hover {
+      color: #ef4444 !important;
+      border-color: #ef4444 !important;
+    }
+
+    /* Sidebar Widgets */
+    .dashboard-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .sidebar-widget {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .success-border {
+      border-left: 4px solid var(--success-color);
+    }
+    .primary-border {
+      border-left: 4px solid var(--primary-color);
+    }
+    .widget-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .widget-icon {
+      font-size: 1.25rem;
+    }
+    .widget-header h4 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .widget-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .widget-text {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .ai-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 0.4rem;
+      margin-top: 0.25rem;
+    }
+    .ai-link-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.4rem 0.6rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all var(--transition-fast);
+    }
+    .ai-link-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary-color);
+    }
+    .ai-icon {
+      font-size: 0.9rem;
+    }
+    .widget-divider {
+      border: 0;
+      border-top: 1px solid var(--border-light);
+      margin: 0.5rem 0;
+    }
+    .prompt-selector-wrapper {
+      margin-bottom: 0.5rem;
+    }
+    .prompt-box {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--text-primary);
+      user-select: all;
+    }
+    .btn-copy-prompt {
+      font-size: 0.8rem;
+      padding: 0.45rem 1rem;
+    }
+    .copy-alert {
+      font-size: 0.75rem;
+      color: var(--success-color);
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .warning-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: 1.25rem 2rem;
+      background: rgba(217, 119, 6, 0.05);
+      border: 1px solid rgba(217, 119, 6, 0.15);
+      border-left: 4px solid #d97706;
+      border-radius: var(--radius-md);
+      margin-bottom: 0.5rem;
+    }
+    .warning-icon {
+      width: 28px;
+      height: 28px;
+      color: #d97706;
+      flex-shrink: 0;
+    }
+    .warning-content {
+      flex: 1;
+    }
+    .warning-content h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #d97706;
+      margin-bottom: 0.25rem;
+    }
+    .warning-content p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    @media (max-width: 992px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 768px) {
+      .warning-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1.25rem;
+      }
+      .warning-banner .btn-sm {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  `],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DashboardComponent implements OnInit {
+  authService = inject(AuthService);
+  private supabaseService = inject(SupabaseService);
+  private imageService = inject(ImageService);
+  private cdr = inject(ChangeDetectorRef);
+
+  readonly user = this.authService.currentUser;
+  
+  readonly myProducts = signal<Producto[]>([]);
+  readonly loadingProducts = signal<boolean>(true);
+  readonly categories = signal<Categoria[]>([]);
+  readonly isFormOpen = signal<boolean>(false);
+  readonly isEditing = signal<boolean>(false);
+  readonly uploadingImage = signal<boolean>(false);
+  readonly saving = signal<boolean>(false);
+  readonly promptCopied = signal<boolean>(false);
+  readonly imagePromptCopied = signal<boolean>(false);
+  readonly activeImagePrompt = signal<string>('Estilo fotografía de estudio de [Nombre del producto], fondo minimalista de color neutro crema suave con iluminación difusa de estudio y sombras sutiles en la base, alta calidad, diseño premium.');
+
+  readonly uploadedImages = signal<string[]>([]);
+  
+  productForm!: FormGroup;
+  editingProductId: string | null = null;
+
+  constructor(private fb: FormBuilder) {
+    this.initForm();
+  }
+
+  async ngOnInit() {
+    // Esperar si la sesión se está cargando (evita que se intente cargar los productos sin el perfil listo)
+    if (this.authService.loading()) {
+      await new Promise<void>(resolve => {
+        const interval = setInterval(() => {
+          if (!this.authService.loading()) {
+            clearInterval(interval);
+            resolve();
+          }
+        }, 50);
+      });
+    }
+
+    this.cargarCategorias();
+    this.cargarMisProductos();
+  }
+
+  private initForm() {
+    this.productForm = this.fb.group({
+      nombre: ['', [Validators.required]],
+      descripcion: ['', [Validators.required]],
+      precio: [null, [Validators.required, Validators.min(0)]],
+      categoria_id: ['', [Validators.required]],
+      estado: ['publicado', [Validators.required]]
+    });
+  }
+
+  async cargarCategorias() {
+    try {
+      const cats = await this.supabaseService.getCategorias();
+      this.categories.set(cats);
+    } catch (err) {
+      console.error('Error al cargar categorías:', err);
+    }
+  }
+
+  async cargarMisProductos() {
+    this.loadingProducts.set(true);
+    const currentUserProfile = this.user();
+    if (!currentUserProfile) return;
+
+    try {
+      // Si es docente o admin, ver todos los de su colegio. Si es alumno, ver los suyos creados.
+      let filters: any = {};
+      if (currentUserProfile.rol === 'alumno') {
+        // Alumnos ven solo lo creado por ellos o lo de su colegio, para mantenerlo simple filtramos los que creó
+        filters.creado_por = currentUserProfile.id;
+      } else {
+        // Docentes ven los de su colegio
+        filters.institucionId = currentUserProfile.institucion_id;
+      }
+      
+      const { data, error } = await this.supabaseService.client
+        .from('productos')
+        .select(`
+          *,
+          categorias (nombre),
+          instituciones (nombre)
+        `)
+        // Si es alumno, ver solo sus creados.
+        .filter(currentUserProfile.rol === 'alumno' ? 'creado_por' : 'institucion_id', 'eq', currentUserProfile.rol === 'alumno' ? currentUserProfile.id : currentUserProfile.institucion_id);
+      
+      if (error) throw error;
+      this.myProducts.set((data as unknown as Producto[]) || []);
+    } catch (err) {
+      console.error('Error al cargar mis productos:', err);
+    } finally {
+      this.loadingProducts.set(false);
+      this.cdr.markForCheck();
+    }
+  }
+
+  openCreateForm() {
+    this.isEditing.set(false);
+    this.editingProductId = null;
+    this.uploadedImages.set([]);
+    this.initForm();
+    this.isFormOpen.set(true);
+  }
+
+  openEditForm(producto: Producto) {
+    this.isEditing.set(true);
+    this.editingProductId = producto.id || null;
+    this.uploadedImages.set(producto.imagenes);
+    
+    this.productForm.patchValue({
+      nombre: producto.nombre,
+      descripcion: producto.descripcion,
+      precio: producto.precio,
+      categoria_id: producto.categoria_id,
+      estado: producto.estado
+    });
+
+    this.isFormOpen.set(true);
+  }
+
+  closeForm() {
+    this.isFormOpen.set(false);
+    this.isEditing.set(false);
+    this.editingProductId = null;
+    this.uploadedImages.set([]);
+  }
+
+  // --- SUBIDA DE IMÁGENES Y VIDEOS ---
+  async processFiles(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    
+    this.uploadingImage.set(true);
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        
+        // Validar tamaño máximo si es video (límite 15MB)
+        if (file.type.startsWith('video/')) {
+          const maxVideoSize = 15 * 1024 * 1024; // 15MB
+          if (file.size > maxVideoSize) {
+            alert(`El video "${file.name}" supera el límite de 15MB. Por favor, comprímelo o recórtalo antes de subirlo.`);
+            continue;
+          }
+        }
+        
+        // 1. COMPRIMIR EN EL CLIENTE (solo imágenes)
+        const compressedFile = await this.imageService.comprimirImagen(file);
+        
+        // 2. SUBIR A SUPABASE STORAGE
+        const publicUrl = await this.supabaseService.subirImagen(compressedFile);
+        
+        // 3. AGREGAR A LA LISTA
+        this.uploadedImages.update(imgs => [...imgs, publicUrl]);
+      }
+    } catch (err) {
+      console.error('Error al subir archivo:', err);
+      alert('Ocurrió un error al subir el archivo. Verifica tu conexión.');
+    } finally {
+      this.uploadingImage.set(false);
+      this.cdr.markForCheck();
+    }
+  }
+
+  isVideo(url: string): boolean {
+    return url ? (/\.(mp4|webm|ogg|mov)$/i.test(url) || url.includes('/product-images/video-') || url.startsWith('data:video/')) : false;
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.processFiles(input.files);
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    this.processFiles(event.dataTransfer?.files || null);
+  }
+
+  removeImage(index: number) {
+    this.uploadedImages.update(imgs => imgs.filter((_, idx) => idx !== index));
+  }
+
+  // --- GUARDAR PRODUCTO ---
+  async saveProduct() {
+    if (this.productForm.invalid || this.uploadedImages().length === 0) {
+      return;
+    }
+
+    this.saving.set(true);
+    const formVal = this.productForm.value;
+    const currentUserProfile = this.user();
+    
+    if (!currentUserProfile) return;
+
+    // Obtener el tutor encargado:
+    // Si es alumno, su docente_tutor_id. Si es docente, su propio id.
+    const docenteContactoId = currentUserProfile.rol === 'alumno' 
+      ? (currentUserProfile.docente_tutor_id || currentUserProfile.id) // Fallback si no tiene
+      : currentUserProfile.id;
+
+    // Payload parcial para actualización (excluye creado_por y institucion_id que son inmutables)
+    const payload: Partial<Producto> = {
+      nombre: formVal.nombre,
+      descripcion: formVal.descripcion,
+      precio: parseFloat(formVal.precio),
+      imagenes: this.uploadedImages(),
+      categoria_id: formVal.categoria_id,
+      estado: formVal.estado,
+      docente_contacto_id: docenteContactoId
+    };
+
+    try {
+      if (this.isEditing() && this.editingProductId) {
+        await this.supabaseService.actualizarProducto(this.editingProductId, payload);
+      } else {
+        const fullPayload: Producto = {
+          ...payload,
+          institucion_id: currentUserProfile.institucion_id || '',
+          creado_por: currentUserProfile.id
+        } as Producto;
+        await this.supabaseService.crearProducto(fullPayload);
+      }
+      this.closeForm();
+      this.cargarMisProductos();
+    } catch (err) {
+      console.error('Error al guardar producto:', err);
+      alert('Error al guardar el producto. Comprueba los campos.');
+    } finally {
+      this.saving.set(false);
+      this.cdr.markForCheck();
+    }
+  }
+
+  async deleteProduct(id: string) {
+    if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
+
+    try {
+      await this.supabaseService.eliminarProducto(id);
+      this.cargarMisProductos();
+    } catch (err) {
+      console.error('Error al eliminar producto:', err);
+      alert('No se pudo eliminar el producto.');
+    }
+  }
+
+  // Copiar Prompt al portapapeles
+  copyPrompt() {
+    const promptText = `Escribe una descripción comercial y sumamente atractiva para la tienda escolar sobre un producto llamado [Nombre]. Está hecho a mano de [Material] por estudiantes del colegio [Tu Colegio]. Resalta su utilidad, textura y acabado. Keep it simple, 2 párrafos cortos.`;
+    navigator.clipboard.writeText(promptText).then(() => {
+      this.promptCopied.set(true);
+      setTimeout(() => this.promptCopied.set(false), 3000);
+    });
+  }
+
+  // Copiar Prompt de Imagen al portapapeles
+  copyImagePrompt() {
+    navigator.clipboard.writeText(this.activeImagePrompt()).then(() => {
+      this.imagePromptCopied.set(true);
+      setTimeout(() => this.imagePromptCopied.set(false), 3000);
+    });
+  }
+
+  // Manejar el cambio de estilo de prompt de imagen
+  onPromptStyleChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+    if (value === 'estudio') {
+      this.activeImagePrompt.set('Estilo fotografía de estudio de [Nombre del producto], fondo minimalista de color neutro crema suave con iluminación difusa de estudio y sombras sutiles en la base, alta calidad, diseño premium.');
+    } else if (value === 'organico') {
+      this.activeImagePrompt.set('Primer plano artístico (close-up) de [Nombre del producto], iluminación natural de ventana, colocado sobre una mesa de madera rústica limpia, fondo desenfocado sutil (bokeh), colores cálidos y realistas.');
+    } else if (value === 'catalogo') {
+      this.activeImagePrompt.set('Fotografía de catálogo comercial de [Nombre del producto], colocado artísticamente sobre una base texturizada moderna de mármol o piedra, luz de estudio lateral que resalta los detalles del producto, sombras sutiles, alta nitidez.');
+    } else if (value === 'flatlay') {
+      this.activeImagePrompt.set('Vista cenital (flat lay) de [Nombre del producto] organizado estéticamente sobre un fondo mate de color pastel suave, rodeado de algunos elementos artesanales minimalistas complementarios, luz natural difusa, composición simétrica.');
+    } else if (value === 'rustico') {
+      this.activeImagePrompt.set('Fotografía rústica y hogareña de [Nombre del producto], colocado sobre una mesa de madera rústica con un paño de lino natural arrugado, iluminación cálida de atardecer filtrada, ambiente acogedor y artesanal.');
+    } else if (value === 'macro') {
+      this.activeImagePrompt.set('Macrofotografía de ultra alta definición (macro close-up) enfocada en los detalles de textura, costura o acabado de [Nombre del producto], profundidad de campo muy corta (bokeh extremo), luz suave que resalta el relieve artesanal.');
+    } else if (value === 'iluminacion') {
+      this.activeImagePrompt.set('Fotografía dramática de bodegón de [Nombre del producto], fondo oscuro texturizado, iluminación direccional tipo claroscuro (chiaroscuro) que resalta la forma tridimensional y silueta del producto, sombras artísticas profundas.');
+    }
+  }
+}

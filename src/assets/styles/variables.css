@@ -1,0 +1,92 @@
+/* =====================================================================
+   SISTEMA DE DISEÑO DE VITRINA DIGITAL (LA VICTORIA) - VARIABLES CSS
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Fuentes */
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+
+  /* HSL Base Paleta (Tono Café Espresso y Acentos de Ámbar Dorado / Salvia) */
+  --primary-h: 24;
+  --primary-s: 47%;
+  --primary-l: 25%; /* Café Espresso Chocolate */
+  
+  --secondary-h: 145; /* Verde Salvia/Bosque */
+  --secondary-s: 24%;
+  --secondary-l: 38%;
+  
+  --accent-h: 35; /* Ámbar Dorado / Oro */
+  --accent-s: 50%;
+  --accent-l: 53%;
+
+  /* Sistema de Colores - Modo Claro (Default) */
+  --bg-primary: #E9F2DF; /* Verde/Crema Salvia Claro (Base de la foto) */
+  --bg-secondary: #F4F8EE; /* Salvia ultra claro para secciones/tarjetas */
+  --bg-tertiary: #DCE4CF; /* Latte Beige / Salvia Medio */
+  
+  --text-primary: #251c16; /* Grano de Café Tostado */
+  --text-secondary: #4e3e34; /* Cocoa */
+  --text-muted: #88796d; /* Ceniza Cálida */
+  
+  --primary-color: HSL(var(--primary-h), var(--primary-s), var(--primary-l));
+  --primary-light: #F2EDE4; /* Crema Latte */
+  --primary-dark: #3b2311; /* Espresso muy oscuro */
+  
+  --success-color: HSL(var(--secondary-h), var(--secondary-s), var(--secondary-l));
+  --success-light: #EBF2E5;
+  
+  --accent-color: HSL(var(--accent-h), var(--accent-s), var(--accent-l));
+
+  --border-color: #DCE4CF;
+  --border-light: #E2EAD5;
+
+  /* Efecto Cristal (Glassmorphism) - Modo Claro */
+  --glass-bg: rgba(244, 248, 238, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 10px 30px -10px rgba(37, 28, 22, 0.07);
+  --glass-blur: blur(12px);
+
+  /* Sombras y Radios */
+  --shadow-sm: 0 2px 8px -1px rgba(37, 28, 22, 0.03);
+  --shadow-md: 0 12px 24px -6px rgba(37, 28, 22, 0.06);
+  --shadow-lg: 0 20px 40px -12px rgba(37, 28, 22, 0.1);
+  
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  /* Animaciones y Transiciones */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Selector para el modo oscuro */
+[data-theme="dark"] {
+  --bg-primary: #1c120c; /* Espresso Profundo Oscuro */
+  --bg-secondary: #241810; /* Chocolate Oscuro */
+  --bg-tertiary: #2e1e14; /* Café Tostado Medio */
+  
+  --text-primary: #f3ebe4; /* Crema Latte */
+  --text-secondary: #dcd1c6; /* Café con Leche Suave */
+  --text-muted: #9a8b80; /* Gris Cálido */
+  
+  --primary-color: #bfa085; /* Café con Leche Claro */
+  --primary-light: #3a271c;
+  --primary-dark: #dcc2ad;
+  
+  --success-color: HSL(var(--secondary-h), var(--secondary-s), 48%);
+  --success-light: HSL(var(--secondary-h), var(--secondary-s), 14%);
+  
+  --border-color: #3d2b1f;
+  --border-light: #2e1e14;
+
+  /* Efecto Cristal (Glassmorphism) - Modo Oscuro */
+  --glass-bg: rgba(36, 24, 16, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
