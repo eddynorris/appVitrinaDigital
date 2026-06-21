@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Vende en Línea como Pro - Guía para Emprendedoras Digitales</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+@page {
+    size: 794px 1123px;
+    margin: 0;
+}
+:root {
+    --c-bg: #FFFFFF;
+    --c-cream: #FFF9F5;
+    --c-primary: #5B21B6;
+    --c-primary-dark: #4C1D95;
+    --c-primary-light: #F3E8FF;
+    --c-accent-pink: #EC4899;
+    --c-accent-pink-light: #FCE7F3;
+    --c-accent-cyan: #06B6D4;
+    --c-accent-cyan-light: #CFFAFE;
+    --c-accent-yellow: #FBBF24;
+    --c-accent-yellow-light: #FEF3C7;
+    --c-text: #1E293B;
+    --c-text-muted: #64748B;
+    --c-border: #E2E8F0;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 794px;
+    background: var(--c-bg);
+    color: var(--c-text);
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+@media screen {
+    html {
+        height: auto;
+        display: flex;
+        justify-content: center;
+        background: #E5E7EB;
+    }
+    body {
+        margin: 20px auto;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    }
+}
+
+/* ===== COVER ===== */
+.cover {
+    width: 794px;
+    height: 1123px;
+    box-sizing: border-box;
+    break-after: page;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(135deg, #5B21B6 0%, #7C3AED 45%, #EC4899 100%);
+    color: #FFFFFF;
+    padding: 70px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.cover-blob-1, .cover-blob-2 {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+.cover-blob-1 {
+    top: 80px;
+    right: 80px;
+    width: 280px;
+    height: 280px;
+    background: rgba(6, 182, 212, 0.32);
+    filter: blur(20px);
+}
+.cover-blob-2 {
+    bottom: 80px;
+    left: 80px;
+    width: 320px;
+    height: 320px;
+    background: rgba(251, 191, 36, 0.22);
+    filter: blur(25px);
+}
+.cover-tag {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.18);
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+    width: fit-content;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 2;
+}
+.cover-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: 76px;
+    line-height: 1.02;
+    letter-spacing: -2px;
+    margin: 0 0 24px 0;
+    position: relative;
+    z-index: 2;
+}
+.cover-title .accent-word {
+    color: #FBBF24;
+}
+.cover-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.4;
+    max-width: 540px;
+    margin: 0 0 50px 0;
+    opacity: 0.95;
+    position: relative;
+    z-index: 2;
+}
+.cover-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 60px;
+    position: relative;
+    z-index: 2;
+}
+.cover-badge {
+    background: rgba(255,255,255,0.16);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    backdrop-filter: blur(8px);
+}
+.cover-footer {
+    position: absolute;
+    bottom: 50px;
+    left: 60px;
+    right: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    z-index: 2;
+}
+.cover-footer-left {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+}
+.cover-footer-right {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    opacity: 0.85;
+    text-align: right;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+    padding: 45px 50px 40px 50px;
+}
+
+/* Chapter header */
+.chapter-header {
+    break-after: avoid;
+    break-inside: avoid;
+    margin-top: 18px;
+    margin-bottom: 14px;
+}
+.chapter-header:first-child {
+    margin-top: 0;
+}
+.chapter-tag {
+    display: inline-block;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--c-accent-pink);
+    background: var(--c-accent-pink-light);
+    padding: 4px 12px;
+    border-radius: 18px;
+    margin-bottom: 8px;
+}
+.chapter-tag.cyan { color: var(--c-accent-cyan); background: var(--c-accent-cyan-light); }
+.chapter-tag.yellow { color: #B45309; background: var(--c-accent-yellow-light); }
+.chapter-tag.purple { color: var(--c-primary-dark); background: var(--c-primary-light); }
+.chapter-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 1.15;
+    color: var(--c-primary-dark);
+    margin: 0 0 8px 0;
+    letter-spacing: -0.5px;
+}
+.chapter-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--c-text-muted);
+    margin: 0 0 26px 0;
+    line-height: 1.45;
+}
+.divider {
+    height: 3px;
+    width: 50px;
+    background: linear-gradient(90deg, var(--c-accent-pink), var(--c-accent-cyan));
+    border-radius: 4px;
+    margin: 0 0 18px 0;
+}
+
+/* Body text */
+.body-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--c-text);
+    margin: 0 0 6px 0;
+}
+.body-text strong {
+    color: var(--c-primary-dark);
+    font-weight: 700;
+}
+.body-text em {
+    color: var(--c-accent-pink);
+    font-style: italic;
+    font-weight: 500;
+}
+
+/* Subheading */
+.subhead {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 14.5px;
+    color: var(--c-primary);
+    margin: 12px 0 6px 0;
+    break-after: avoid;
+}
+.subhead .emoji {
+    color: var(--c-accent-pink);
+    margin-right: 6px;
+}
+
+/* Cards */
+.card {
+    break-inside: avoid;
+    margin-bottom: 6px;
+    padding: 9px 13px;
+    background: var(--c-cream);
+    border-left: 4px solid var(--c-accent-pink);
+    border-radius: 10px;
+}
+.card.cyan { border-left-color: var(--c-accent-cyan); background: #F0FDFF; }
+.card.yellow { border-left-color: var(--c-accent-yellow); background: #FFFBEB; }
+.card.purple { border-left-color: var(--c-primary); background: var(--c-primary-light); }
+.card-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 12.5px;
+    color: var(--c-primary-dark);
+    margin: 0 0 3px 0;
+}
+.card-text {
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: var(--c-text);
+    margin: 0;
+}
+
+/* Stat blocks */
+.stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin: 12px 0;
+    break-inside: avoid;
+}
+.stat-block {
+    background: linear-gradient(135deg, var(--c-primary-light), #FFFFFF);
+    border: 1px solid var(--c-border);
+    border-radius: 10px;
+    padding: 12px 10px;
+    text-align: center;
+}
+.stat-number {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--c-accent-pink);
+    margin-bottom: 3px;
+}
+.stat-number.cyan { color: var(--c-accent-cyan); }
+.stat-number.purple { color: var(--c-primary); }
+.stat-label {
+    font-size: 10px;
+    color: var(--c-text-muted);
+    line-height: 1.25;
+    font-weight: 500;
+}
+
+/* Table */
+.table-wrap {
+    break-inside: avoid;
+    margin: 10px 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--c-border);
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    table-layout: fixed;
+}
+thead {
+    background: var(--c-primary);
+    color: #FFFFFF;
+}
+th {
+    padding: 7px 6px;
+    text-align: left;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 10.5px;
+}
+td {
+    padding: 6px 6px;
+    border-top: 1px solid var(--c-border);
+    vertical-align: top;
+    line-height: 1.35;
+    overflow-wrap: break-word;
+}
+tbody tr:nth-child(odd) {
+    background: #FAFAFA;
+}
+tbody tr:nth-child(even) {
+    background: #FFFFFF;
+}
+.td-strong {
+    font-weight: 600;
+    color: var(--c-primary-dark);
+}
+
+/* Prompt box */
+.prompt-box {
+    break-inside: avoid;
+    background: #1E293B;
+    color: #E2E8F0;
+    border-radius: 10px;
+    padding: 8px 11px;
+    margin: 5px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    line-height: 1.4;
+    border-left: 4px solid var(--c-accent-pink);
+}
+.prompt-box.cyan { border-left-color: var(--c-accent-cyan); }
+.prompt-box.yellow { border-left-color: var(--c-accent-yellow); }
+.prompt-label {
+    display: block;
+    font-family: 'Poppins', sans-serif;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--c-accent-pink);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+.prompt-label.cyan { color: var(--c-accent-cyan); }
+.prompt-label.yellow { color: var(--c-accent-yellow); }
+.prompt-text {
+    color: #F1F5F9;
+}
+.prompt-placeholder {
+    color: var(--c-accent-yellow);
+    font-weight: 700;
+}
+
+/* Exercise box */
+.exercise {
+    break-inside: avoid;
+    background: linear-gradient(135deg, var(--c-accent-yellow-light), #FFFFFF);
+    border: 2px dashed var(--c-accent-yellow);
+    border-radius: 10px;
+    padding: 9px 12px;
+    margin: 7px 0;
+}
+.exercise-label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    color: #B45309;
+    margin-bottom: 4px;
+}
+.exercise-text {
+    font-size: 11.5px;
+    color: var(--c-text);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Numbered steps */
+.steps {
+    margin: 6px 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step-counter;
+}
+.steps li {
+    break-inside: avoid;
+    counter-increment: step-counter;
+    padding: 5px 0 5px 30px;
+    position: relative;
+    margin-bottom: 3px;
+    border-bottom: 1px solid var(--c-border);
+    font-size: 11px;
+    line-height: 1.45;
+}
+.steps li:last-child { border-bottom: none; }
+.steps li::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, var(--c-accent-pink), var(--c-primary));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+}
+.steps li strong {
+    color: var(--c-primary-dark);
+}
+
+/* Index list */
+.index-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 12px 0;
+}
+.index-item {
+    break-inside: avoid;
+    background: #FFFFFF;
+    border: 1px solid var(--c-border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.index-number {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    background: linear-gradient(135deg, var(--c-accent-pink), var(--c-primary));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+.index-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--c-primary-dark);
+    line-height: 1.3;
+}
+
+/* Checklist */
+.checklist-group {
+    break-inside: avoid;
+    margin: 6px 0;
+    background: var(--c-cream);
+    border-radius: 10px;
+    padding: 8px 12px;
+}
+.checklist-group-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 11.5px;
+    color: var(--c-primary-dark);
+    margin: 0 0 4px 0;
+    padding-bottom: 3px;
+    border-bottom: 2px solid var(--c-accent-pink);
+}
+.checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    padding: 2px 0;
+    font-size: 11px;
+    line-height: 1.4;
+}
+.checklist-box {
+    width: 13px;
+    height: 13px;
+    border: 2px solid var(--c-accent-pink);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* Highlight callout */
+.callout {
+    break-inside: avoid;
+    background: linear-gradient(135deg, var(--c-primary), var(--c-accent-pink));
+    color: white;
+    border-radius: 10px;
+    padding: 10px 16px;
+    margin: 8px 0;
+    text-align: center;
+}
+.callout-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 12.5px;
+    margin-bottom: 3px;
+}
+.callout-text {
+    font-size: 11px;
+    line-height: 1.4;
+    opacity: 0.95;
+    margin: 0;
+}
+
+/* Reference list */
+.ref-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: ref-counter;
+}
+.ref-list li {
+    counter-increment: ref-counter;
+    padding: 3px 0 3px 22px;
+    position: relative;
+    font-size: 9.5px;
+    line-height: 1.35;
+    color: var(--c-text);
+    border-bottom: 1px dashed var(--c-border);
+}
+.ref-list li::before {
+    content: counter(ref-counter);
+    position: absolute;
+    left: 0;
+    top: 3px;
+    width: 16px;
+    height: 16px;
+    background: var(--c-primary-light);
+    color: var(--c-primary-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 9px;
+}
+.ref-list li strong {
+    color: var(--c-primary-dark);
+}
+
+/* Reference category */
+.ref-category {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--c-accent-pink);
+    margin: 7px 0 3px 0;
+    padding-bottom: 2px;
+    border-bottom: 2px solid var(--c-accent-pink-light);
+    break-after: avoid;
+}
+
+/* Ending page (sources) */
+.ending {
+    width: 794px;
+    height: 1123px;
+    box-sizing: border-box;
+    break-before: page;
+    overflow: hidden;
+    padding: 28px 35px 25px 35px;
+    background: var(--c-bg);
+}
+.ending .chapter-header {
+    margin-top: 0;
+    margin-bottom: 6px;
+}
+.ending .chapter-title {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+.ending .chapter-subtitle {
+    margin-bottom: 14px;
+    font-size: 11.5px;
+}
+.ending .divider {
+    margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<div class="cover">
+    <div class="cover-blob-1"></div>
+    <div class="cover-blob-2"></div>
+    <div class="cover-tag">Taller de Proyección Social</div>
+    <h1 class="cover-title">Vende en Línea<br><span class="accent-word">como Pro</span></h1>
+    <p class="cover-subtitle">Guía práctica para emprendedoras digitales. Aprende a mostrar tus productos, crear contenido con IA y vender por WhatsApp desde tu celular.</p>
+    <div class="cover-badges">
+        <span class="cover-badge">Comercio Digital</span>
+        <span class="cover-badge">Redes Sociales</span>
+        <span class="cover-badge">IA para Fotos y Video</span>
+        <span class="cover-badge">WhatsApp Business</span>
+    </div>
+    <div class="cover-footer">
+        <div class="cover-footer-left">Guía para alumnas de 4.° de secundaria</div>
+        <div class="cover-footer-right">EDICIÓN 2026<br></div>
+    </div>
+</div>
+
+<!-- ============ MAIN CONTENT ============ -->
+<div class="main-content">
+
+<!-- ===== WELCOME + INDEX ===== -->
+<div class="chapter-header">
+    <span class="chapter-tag yellow">Bienvenida</span>
+    <h2 class="chapter-title">¡Hola, emprendedora!</h2>
+    <p class="chapter-subtitle">Esta guía es tuya. Aquí aprenderás, paso a paso, a convertir los productos que vendes en tu colegio en una verdadera tienda en línea.</p>
+    <div class="divider"></div>
+</div>
+
+<p class="body-text">¿Alguna vez viste a una chica de tu edad vendiendo bisutería, polladas, stickers o desayunos por Instagram y pensaste <em>"yo podría hacer eso"</em>? Tienes razón: puedes, y esta guía te enseñará exactamente cómo. No necesitas una cámara profesional, una computadora costosa ni años de experiencia. Solo necesitas tu celular, conexión a internet y muchas ganas de aprender.</p>
+
+<p class="body-text">El comercio digital creció <strong>35% en Perú durante 2024</strong>, y la mitad de esas ventas provienen de personas como tú: jóvenes emprendedoras que empiezan desde su cuarto con un producto, un celular y una idea. Las herramientas que verás aquí son <strong>gratis o tienen versiones gratuitas</strong>, están pensadas para usarse desde un teléfono y te permitirán competir con marcas grandes sin tener su presupuesto.</p>
+
+<p class="body-text">En las próximas páginas encontrarás datos reales del comercio digital, estrategias para redes sociales, plantillas de prompts para mejorar fotos y videos con inteligencia artificial, y una guía completa para automatizar tus respuestas en WhatsApp. Cada capítulo termina con un mini-reto práctico que puedes hacer en menos de 15 minutos. Al final de la guía, tendrás todo lo necesario para que tu primer cliente te encuentre en línea esta misma semana.</p>
+
+<div class="subhead">¿Qué encontrarás en esta guía?</div>
+<div class="index-grid">
+    <div class="index-item"><div class="index-number">1</div><div class="index-text">El comercio digital en el mundo y Perú</div></div>
+    <div class="index-item"><div class="index-number">2</div><div class="index-text">Redes sociales para mostrar productos</div></div>
+    <div class="index-item"><div class="index-number">3</div><div class="index-text">Prompts para mejorar fotos de productos</div></div>
+    <div class="index-item"><div class="index-number">4</div><div class="index-text">Prompts para videos con IA (Seedance, Kling, Veo, CapCut)</div></div>
+    <div class="index-item"><div class="index-number">5</div><div class="index-text">Automatización con WhatsApp Business</div></div>
+    <div class="index-item"><div class="index-number">6</div><div class="index-text">Checklist final y plantilla maestra</div></div>
+</div>
+
+<div class="callout">
+    <div class="callout-title">Tu primer cliente te está esperando en línea</div>
+    <p class="callout-text">Al terminar esta guía tendrás tu vitrina digital lista, tus fotos mejoradas con IA, tu primer video de producto y WhatsApp respondiendo solo. ¡Empecemos!</p>
+</div>
+
+<!-- ===== CHAPTER 1: COMERCIO DIGITAL ===== -->
+<div class="chapter-header">
+    <span class="chapter-tag">Capítulo 1</span>
+    <h2 class="chapter-title">El comercio digital en el mundo (y por qué tú cuentas)</h2>
+    <p class="chapter-subtitle">Datos reales del e-commerce mundial, latinoamericano y peruano. Lo que grandes marcas y micro-influencers tienen en común.</p>
+    <div class="divider"></div>
+</div>
+
+<p class="body-text">Cuando hablamos de "comercio digital" o "e-commerce", parece que solo hablamos de Amazon, Mercado Libre o grandes tiendas por departamento. Pero la realidad es muy distinta: el comercio digital es, en su mayoría, un ejército de millones de personas comunes vendiendo productos desde su casa. Una chica que vende manicuras por Instagram, un chico que ofrece polos con diseños propios por TikTok, una señora que vende tortas por WhatsApp: todos son parte del comercio digital y juntos mueven más dinero que muchas cadenas multinacionales.</p>
+
+<div class="stats-row">
+    <div class="stat-block">
+        <div class="stat-number">$6.9T</div>
+        <div class="stat-label">Ventas globales de e-commerce en 2024 (Statista)</div>
+    </div>
+    <div class="stat-block">
+        <div class="stat-number cyan">2.7B</div>
+        <div class="stat-label">Personas compran en línea en el mundo</div>
+    </div>
+    <div class="stat-block">
+        <div class="stat-number purple">35%</div>
+        <div class="stat-label">Crecimiento del e-commerce en Perú (2024)</div>
+    </div>
+</div>
+
+<p class="body-text">Según el reporte <strong>"Digital 2024: Global Overview"</strong> de We Are Social y Meltwater, en el mundo hay <strong>5.4 mil millones de personas usando redes sociales</strong>, y el <strong>57% de los usuarios ha comprado algo que vio en una red social</strong>. Eso significa que más de la mitad de tus potenciales clientes ya están comprando productos que descubren en Instagram, TikTok o Facebook. Si tu producto no está en redes, simplemente no existe para ellos.</p>
+
+<div class="subhead">Latinomérica y Perú: una región que compra por celular</div>
+
+<p class="body-text">Latinomérica es una de las regiones donde más rápido crece el comercio digital. Según el estudio <strong>"Economy Report 2024"</strong> de la Comisión Económica para América Latina y el Caribe (CEPAL), las ventas online en la región superaron los <strong>USD 509 mil millones en 2024</strong>, con Brasil, México y Argentina liderando el ranking. Perú ocupó el cuarto lugar con un mercado de USD 22 mil millones, creciendo a un ritmo anual del 35%, muy por encima del promedio mundial que es del 9%.</p>
+
+<div class="card cyan">
+    <div class="card-title">El dato peruano que te importa</div>
+    <p class="card-text">Según el INEI, en Perú hay más de <strong>2.1 millones de microempresas</strong>, y el <strong>68% de ellas vende por WhatsApp</strong>, el <strong>52% por Facebook o Instagram</strong>, y el <strong>23% por TikTok</strong>. Eso significa que la mayoría de los emprendedores peruanos ya están usando redes sociales para vender: si tú aún no lo haces, estás perdiendo clientes frente a tus competidoras.</p>
+</div>
+
+<div class="subhead">El fenómeno de los micro-influencers y vendedoras en redes</div>
+
+<p class="body-text">No necesitas millones de seguidores para vender en línea. Un estudio de Hootsuite demostró que las cuentas con <strong>entre 1,000 y 10,000 seguidores</strong> (lo que se llama "micro-influencers") tienen una tasa de engagement del 6.8%, mientras que las cuentas con millones de seguidores apenas llegan al 1.5%. Esto significa que <strong>las cuentas pequeñas conectan mejor con su audiencia</strong> y, por lo tanto, venden más por cada seguidor.</p>
+
+<p class="body-text">Casos reales que puedes investigar: <strong>Valeria Marín</strong>, una joven mexicana que empezó vendiendo collaritos en Instagram a los 16 años y hoy factura seis cifras; <strong>Sofía Carpio</strong>, peruana que a los 17 lanzó su marca de stickers "StickersDeSofi" desde su cuarto en Surco; <strong>Mariana Quispe</strong>, una chica cajamarquina que vende pollos asados por WhatsApp y factura más que su papá con un empleo formal. Todas empezaron exactamente donde estás tú hoy: con un producto, un celular y miedo a equivocarse. La diferencia es que <strong>dieron el primer paso</strong>.</p>
+
+<div class="card purple">
+    <div class="card-title">¿Por qué este es el mejor momento para empezar?</div>
+    <p class="card-text">Tres razones: (1) las herramientas de IA generativa (gratis) te permiten tener contenido profesional sin cámara ni diseñador; (2) los jóvenes de tu edad compran cada vez más por Instagram y TikTok; (3) WhatsApp Business te permite tener un catálogo digital sin pagar una tienda online. Nunca antes fue tan barato y fácil empezar. Aprovecha.</p>
+</div>
+
+<div class="exercise">
+    <div class="exercise-label">Mini-Reto 1</div>
+    <p class="exercise-text">Abre Instagram y busca 3 cuentas peruanas que vendan productos similares al tuyo (pueden ser bisutería, food, ropa, manualidades). Anota en tu cuaderno: ¿cuántos seguidores tienen? ¿Qué tipo de fotos publican? ¿Responden rápido los mensajes? Esa será tu línea de partida.</p>
+</div>
+
+<!-- ===== CHAPTER 2 PART 1: REDES SOCIALES PLATAFORMAS ===== -->
+<div class="chapter-header">
+    <span class="chapter-tag cyan">Capítulo 2 · Parte 1</span>
+    <h2 class="chapter-title">Redes sociales: dónde mostrar tus productos</h2>
+    <p class="chapter-subtitle">Cinco plataformas que necesitas conocer y cuál usar según tu tipo de producto.</p>
+    <div class="divider"></div>
+</div>
+
+<p class="body-text">No necesitas estar en todas las redes sociales. Necesitas estar bien en <strong>dos o tres</strong> que funcionen para tu producto. Una vendedora de bisutería brillará en Instagram, una de comida rápida tendrá más pedidos por WhatsApp Status, y una de ropa juvenil encontrará su público en TikTok. Elegir bien ahorra tiempo y multiplica ventas. A continuación, te explico las cinco plataformas que más se usan en Perú para vender, con su mejor uso.</p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+    <th style="width:18%">Plataforma</th>
+    <th style="width:22%">Ideal para</th>
+    <th style="width:25%">Contenido que vende</th>
+    <th style="width:20%">Horario top Perú</th>
+    <th style="width:15%">Formato</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <td class="td-strong">Instagram</td>
+    <td>Bisutería, moda, cosmética, manualidades, food estético</td>
+    <td>Reels de 15-30s, Stories diarias, carrusel educativo</td>
+    <td>12pm-2pm y 7pm-10pm</td>
+    <td>Cuadrado 1:1 o vertical 9:16</td>
+</tr>
+<tr>
+    <td class="td-strong">TikTok</td>
+    <td>Productos con "wow", tendencia, públicos jóvenes 13-24</td>
+    <td>Videos de 15-60s, tutoriales, "detrás de cámaras"</td>
+    <td>6pm-10pm</td>
+    <td>Vertical 9:16</td>
+</tr>
+<tr>
+    <td class="td-strong">Facebook Marketplace</td>
+    <td>Productos físicos locales, electrodomésticos, ropa en general</td>
+    <td>Foto clara + precio + ubicación</td>
+    <td>Todo el día</td>
+    <td>Cuadrado o horizontal</td>
+</tr>
+<tr>
+    <td class="td-strong">WhatsApp Status</td>
+    <td>Clientes recurrentes, lanzamientos, ofertas flash</td>
+    <td>Foto + texto, video corto de 15s, encuestas</td>
+    <td>8pm-10pm</td>
+    <td>Vertical 9:16</td>
+</tr>
+<tr>
+    <td class="td-strong">YouTube Shorts</td>
+    <td>Tutoriales de uso, unboxing, comparativas</td>
+    <td>Videos de 30-60s con audio claro</td>
+    <td>6pm-9pm</td>
+    <td>Vertical 9:16</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="subhead">La regla de oro: elige 2 plataformas y dominance</div>
+
+<p class="body-text">Si tienes poco tiempo (y como estudiante lo tienes), elegir dos plataformas es suficiente. La combinación más recomendada para empezar es <strong>Instagram + WhatsApp</strong>: en Instagram muestras tu producto al mundo con Reels y Stories, y en WhatsApp cierras la venta con clientes que ya te conocen. Una vez que domines esas dos, puedes expandirte a TikTok para alcanzar público nuevo. No cometas el error de abrir 5 cuentas y abandonar 3: eso da mala imagen y los clientes notan cuando una cuenta está "muerta".</p>
+
+<div class="card">
+    <div class="card-title">Truco para perfiles nuevos</div>
+    <p class="card-text">Cuando crees tu cuenta de Instagram o TikTok para vender, completa el 100% del perfil: foto (puede ser tu logo o una foto de producto nítida), biografía clara con qué vendes ("Bisutería hecha a mano en Lima 📍 Envíos a todo el país"), y un link de WhatsApp con tu catálogo. Un perfil completo recibe <strong>4 veces más mensajes</strong> que uno incompleto.</p>
+</div>
+
+<div class="exercise">
+    <div class="exercise-label">Mini-Reto 2</div>
+    <p class="exercise-text">Elige las 2 plataformas donde vas a vender. Crea o mejora tu perfil en cada una completando: foto, nombre de usuario (que sea fácil de recordar), biografía con qué vendes, y un enlace de WhatsApp. Toma captura de pantalla de tus perfiles listos.</p>
+</div>
+
+<!-- ===== CHAPTER 2 PART 2: ESTRATEGIAS DE CONTENIDO ===== -->
+<div class="chapter-header">
+    <span class="chapter-tag cyan">Capítulo 2 · Parte 2</span>
+    <h2 class="chapter-title">Estrategias de contenido que de verdad venden</h2>
+    <p class="chapter-subtitle">Calendario, tipos de post, hashtags locales y cómo responder para cerrar ventas.</p>
+    <div class="divider"></div>
+</div>
+
+<p class="body-text">Tener una cuenta de Instagram no es suficiente: necesitas una estrategia de contenido. Esto significa <strong>publicar con propósito, frecuencia y variedad</strong>. Las cuentas que más venden no son las que más postean, sino las que postean el contenido correcto en el momento correcto. A continuación, te comparto la fórmula que usan vendedoras exitosas en Perú y Latinoamérica.</p>
+
+<div class="subhead">El calendario mínimo viable: 3 posts por semana</div>
+
+<p class="body-text">Si recién empiezas, no intentes publicar a diario: te vas a agotar en dos semanas. El calendario mínimo recomendado es <strong>3 publicaciones por semana en el feed + 1 Story diaria</strong>. Cada publicación del feed debe tener un propósito distinto para no aburrir a tus seguidores. La distribución ideal es: lunes de producto, miércoles de educación o behind-the-scenes, viernes de oferta o testimonio.</p>
+
+<div class="card yellow">
+    <div class="card-title">Los 4 tipos de contenido que SÍ venden</div>
+    <p class="card-text"><strong>(1) Producto puro:</strong> foto o video del producto con fondo limpio. <strong>(2) Lifestyle:</strong> el producto en uso (un collar puesto, una pollada servida). <strong>(3) Educación:</strong> cómo cuidar la bisutería, cómo elegir talla, qué ingredientes tiene el desayuno. <strong>(4) Social proof:</strong> captura de WhatsApp con un cliente feliz, foto del pedido entregado. Mezcla estos 4 tipos y nunca te faltarán ideas.</p>
+</div>
+
+<div class="subhead">Hashtags locales: el secreto que casi nadie usa</div>
+
+<p class="body-text">Los hashtags son etiquetas que permiten que personas que no te siguen descubran tu contenido. El error más común es usar hashtags genéricos como #moda o #fashion, que tienen millones de publicaciones y tu post se pierde. La estrategia inteligente es usar <strong>hashtags locales y específicos</strong> que tengan entre 1,000 y 100,000 publicaciones. Así tu post se ve más tiempo y llega a personas que sí pueden comprarte.</p>
+
+<div class="prompt-box">
+    <span class="prompt-label">Hashtags recomendados para Perú</span>
+    <span class="prompt-text">#HechoEnPeru #EmprendedoraPeruana #CompraLocalPE #TiendaLima #BisuteriaLima #[TuCiudad]Emprende #ApoyoPequeñosNegocios #MarcaPeruana #[TuProducto]Peru #[TuProducto]HechoAMano</span>
+</div>
+
+<div class="subhead">Cómo responder comentarios y mensajes (y cerrar ventas)</div>
+
+<p class="body-text">El error número uno de las vendedoras novatas es no responder rápido. Un estudio de la consultora HubSpot demostró que <strong>responder en menos de 5 minutos multiplica por 8 la probabilidad de cerrar la venta</strong>. Si tardas 1 hora, las probabilidades caen al 25%. Si tardas más de 24 horas, prácticamente has perdido al cliente. Por eso, configurar respuestas automáticas en WhatsApp (lo veremos en el Capítulo 5) es tan importante.</p>
+
+<p class="body-text">Cuando un cliente escribe "¿Precio?", <strong>nunca respondas solo el número</strong>. Responde precio + pregunta calificadora: "¡Hola! Cuesta S/35. ¿Lo quieres en color dorado o plateado?". Esto logra dos cosas: demuestra que leíste, y avanza la conversación hacia el cierre. Cuando el cliente pregunta "¿Hacen envíos?", responde "¡Sí! Hacemos envíos a todo Lima por S/5 y al province por Olva. ¿Para qué zona sería?". <strong>Siempre cierras con una pregunta.</strong></p>
+
+<div class="callout">
+    <div class="callout-title">Llamadas a la acción efectivas</div>
+    <p class="callout-text">No digas "compra". Di: "Escríbeme al WhatsApp para reservar" o "Solo me quedan 3 unidades, ¿te separo una?". La urgencia y la acción concreta multiplican las respuestas.</p>
+</div>
+
+<div class="exercise">
+    <div class="exercise-label">Mini-Reto 3</div>
+    <p class="exercise-text">Planifica tus próximos 3 posts en una hoja: lunes (producto), miércoles (educación/tutorial), viernes (oferta/testimonio). Para cada uno define: tipo de contenido, foto que necesitas, texto del post, y 8 hashtags locales. Cuando los tengas listos, programa o publica el primero.</p>
+</div>
+
+<!-- ===== CHAPTER 3 PART 1: PROMPTS PARA FOTOS ===== -->
+<div class="chapter-header">
+    <span class="chapter-tag yellow">Capítulo 3 · Parte 1</span>
+    <h2 class="chapter-title">Prompts para mejorar fotos de tus productos</h2>
+    <p class="chapter-subtitle">Qué es un prompt, anatomía del prompt ideal, herramientas gratuitas y consejos de toma.</p>
+    <div class="divider"></div>
+</div>
+
+<p class="body-text">Un <strong>prompt</strong> es la instrucción de texto que le das a una herramienta de inteligencia artificial para que genere o mejore una imagen. Si le dices "haz linda esta foto", el resultado será mediocre. Si le dices "mejora la iluminación de este collar de plata sobre fondo blanco con luz suave de estudio, mantén el brillo del metal y corrige la nitidez", el resultado será profesional. La diferencia está en <strong>cómo escribes el prompt</strong>.</p>
+
+<div class="subhead">La anatomía del prompt ideal: 6 ingredientes</div>
+
+<p class="body-text">Todo prompt profesional para fotos de productos contiene seis elementos. No siempre necesitas los seis, pero entre más uses, mejor será el resultado. Memoriza esta fórmula: <strong>SUJETO + ENTORNO + ILUMINACIÓN + ÁNGULO + ESTILO + DETALLES</strong>.</p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+    <th style="width:18%">Elemento</th>
+    <th style="width:42%">Qué describes</th>
+    <th style="width:40%">Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <td class="td-strong">SUJETO</td>
+    <td>Qué producto es, color, material</td>
+    <td>"collar de plata con dije de cuarzo rosa"</td>
+</tr>
+<tr>
+    <td class="td-strong">ENTORNO</td>
+    <td>Fondo, superficie, contexto</td>
+    <td>"sobre fondo blanco liso" / "sobre madera rústica"</td>
+</tr>
+<tr>
+    <td class="td-strong">ILUMINACIÓN</td>
+    <td>Tipo, dirección, intensidad de luz</td>
+    <td>"con luz natural difusa de ventana" / "iluminación de estudio suave"</td>
+</tr>
+<tr>
+    <td class="td-strong">ÁNGULO</td>
+    <td>Desde dónde se toma la foto</td>
+    <td>"toma frontal a la altura del producto" / "plano cenital desde arriba"</td>
+</tr>
+<tr>
+    <td class="td-strong">ESTILO</td>
+    <td>Estética general, ambiente</td>
+    <td>"estilo minimalista escandinavo" / "estética luxury dorada"</td>
+</tr>
+<tr>
+    <td class="td-strong">DETALLES</td>
+    <td>Toques finales, calidad</td>
+    <td>"alta resolución, foco nítido, sin grano"</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="subhead">Herramientas de IA 2025 (todas desde el celular)</div>
+
+<div class="card">
+    <div class="card-title">Nano Banana (Gemini 2.5 Flash Image) — Google AI Studio</div>
+    <p class="card-text"><strong>Gratis con cuenta Google.</strong> Es el modelo de imagen más actual de Google (lanzado en 2025), apodado "Nano Banana" por su icono amarillo. Genera y edita imágenes fotorrealistas con calidad profesional. <strong>Gratis: ~25 generaciones por día</strong> (RPD) en Google AI Studio con cuenta Gmail. <strong>Cuándo cobran:</strong> si superas el límite diario o si usas la API con un proyecto de pago (~USD $0.039 por imagen, ~USD $30 por millón de tokens de salida). No pide tarjeta para empezar. Accede en <em>aistudio.google.com/models/nano-banana</em>.</p>
+</div>
+
+<div class="card cyan">
+    <div class="card-title">GPT Image 1 — OpenAI (vía ChatGPT)</div>
+    <p class="card-text"><strong>Gratis limitado en ChatGPT (cuenta gratuita).</strong> Reemplazó a DALL·E 3 en 2025. Genera imágenes con excelente comprensión de prompts y texto legible dentro de la imagen (ideal para logos, banners de oferta). <strong>Gratis: 3 imágenes por día</strong> en chatgpt.com con cuenta sin pagar. <strong>Cuándo cobran:</strong> si quieres más, necesitas ChatGPT Plus (USD $20/mes) o pagar la API (~USD $0.04 a $0.167 por imagen según calidad). Accede en <em>chatgpt.com</em>.</p>
+</div>
+
+<div class="card yellow">
+    <div class="card-title">Photoroom (App iOS/Android/Web) — Quita fondos</div>
+    <p class="card-text"><strong>El rey para quitar y cambiar fondos de productos.</strong> Detecta automáticamente el producto y lo pone sobre fondos profesionales (blanco, color, escenas, gradientes). <strong>Gratis: 250 exportaciones por mes</strong> con Background Remover, Retouch y plantillas básicas. <strong>Cuándo cobran:</strong> si superas las 250/mes o quieres AI Backgrounds premium, sin marca de agua HD o batch (procesar varias a la vez): Pro USD $9.99/mes, Max USD $19.99/mes. No pide tarjeta para empezar.</p>
+</div>
+
+<div class="card purple">
+    <div class="card-title">Canva con Magic Studio (Web/App)</div>
+    <p class="card-text"><strong>Diseña tus publicaciones para Instagram directamente ahí.</strong> Tiene IA gratuita: Magic Edit (cambiar elementos), Magic Eraser (borrar fondos), Magic Write (textos). <strong>Gratis: 50 usos de IA al mes</strong> + plantillas y exportación ilimitada. <strong>Cuándo cobran:</strong> Canva Pro USD $12.99/mes (o USD $119.99/año) para desbloquear todas las IA, fondos premium y Brand Kit. No pide tarjeta para cuenta gratis.</p>
+</div>
+
+<div class="callout">
+    <div class="callout-title">¿Cuál usar primero?</div>
+    <p class="callout-text"><strong>Flujo recomendado:</strong> (1) Toma la foto con tu celular → (2) Pásala por Photoroom para quitar fondo → (3) Sube la imagen limpia a Nano Banana o GPT Image para generar una versión profesional con un prompt → (4) Ponle texto en Canva. Total: USD $0, ~15 minutos, 3 herramientas.</p>
+</div>
+
+<div class="subhead">Antes de la IA: cómo tomar la foto original</div>
+
+<p class="body-text">La IA mejora fotos, pero no hace milagros. Si la foto original es oscura o borrosa, el resultado será mediocre. Antes de pasar tu foto por cualquier herramienta, asegúrate de seguir estos cuatro consejos que marcan el 80% de la diferencia:</p>
+
+<ol class="steps">
+    <li><strong>Luz natural cerca de ventana</strong>: La mejor luz es gratuita. Coloca tu producto a 30cm de una ventana entre 9am y 11am o entre 3pm y 5pm. Evita el sol directo (crea sombras duras) y la luz amarilla de bombillas.</li>
+    <li><strong>Fondo limpio</strong>: Usa una cartulina blanca, una tela lisa o una pared sin cuadros. Cualquier fondo con ruido visual (mantel floreado, escritorio desordenado) resta protagonismo al producto.</li>
+    <li><strong>Ángulo a la altura del producto</strong>: Si el producto está sobre la mesa, baja tu celular hasta la altura de la mesa. Tomar desde arriba daña las proporciones; tomar desde abajo agranda falsamente.</li>
+    <li><strong>Limpia el lente</strong>: El 80% de las fotos borrosas se debe a un lente sucio. Pasa tu camiseta de algodón o un paño por el lente antes de cada sesión. Parece tonto, pero funciona.</li>
+</ol>
+
+<div class="exercise">
+    <div class="exercise-label">Mini-Reto 4</div>
+    <p class="exercise-text">Toma 3 fotos de tu producto siguiendo los 4 consejos (luz natural, fondo limpio, ángulo correcto, lente limpio). Sube una a Photoroom para quitar el fondo y luego pídela a Nano Banana con el prompt de la plantilla 1. Compara el "antes" y "después": la diferencia te sorprenderá.</p>
+</div>
+
+<!-- ===== CHAPTER 3 PART 2: PLANTILLAS DE PROMPTS PARA FOTOS ===== -->
+<div class="chapter-header">
+    <span class="chapter-tag yellow">Capítulo 3 · Parte 2</span>
+    <h2 class="chapter-title">5 plantillas de prompts para fotos (rellenables)</h2>
+    <p class="chapter-subtitle">Copia, reemplaza los campos en mayúsculas y pega en tu herramienta de IA favorita.</p>
+    <div class="divider"></div>
+</div>
+
+<p class="body-text">Las siguientes 5 plantillas están diseñadas para los casos más comunes que enfrentarás. Solo reemplaza el texto entre corchetes <strong>[ASÍ]</strong> con la información de tu producto. Funcionan en <strong>Nano Banana</strong> (Gemini 2.5 Flash Image) y <strong>GPT Image 1</strong> (ChatGPT), las dos IA generativas de imagen más actuales en 2025, además de Photoroom y Canva IA. Recuerda: entre más específica seas, mejor será el resultado.</p>
+
+<div class="prompt-box">
+    <span class="prompt-label">Plantilla 1 · Producto sobre fondo limpio (catálogo)</span>
+    <span class="prompt-text">Fotografía profesional de [TIPO DE PRODUCTO] de [COLOR/MATERIAL], sobre fondo [BLANCO LISO / COLOR PASTEL], con iluminación de estudio suave y difusa desde la izquierda, toma frontal a la altura del producto, estilo minimalista editorial, alta resolución, foco nítido, sin reflejos molestos, estética de catálogo premium.</span>
+</div>
+
+<div class="prompt-box cyan">
+    <span class="prompt-label cyan">Plantilla 2 · Producto en uso (lifestyle)</span>
+    <span class="prompt-text">[TIPO DE PRODUCTO] de [COLOR] siendo usado/a por una [MUJER JOVEN / MANOS FEMENINAS] en un entorno [COCINA / CUARTO / OFICINA], con luz natural de ventana, ángulo [FRONTAL / CENITAL] cercano, estética cálida y juvenil, tonos pastel, alta resolución, foco en el producto, fondo ligeramente desenfocado estilo bokeh.</span>
+</div>
+
+<div class="prompt-box yellow">
+    <span class="prompt-label yellow">Plantilla 3 · Producto con efecto premium</span>
+    <span class="prompt-text">[TIPO DE PRODUCTO] de [MATERIAL PREMIUM: cuero/plata/oro/rosa] sobre [SUPERFICIE: mármol/terciopelo/madera oscura], iluminación cinematográfica con luz principal cálida y contraluz frío suave, fondo [NEGRO / AZUL OSCURO] con destellos dorados, estilo luxury editorial tipo revista Vogue, alta resolución, detalle de textura, foco nítido en relieve.</span>
+</div>
+
+<div class="prompt-box">
+    <span class="prompt-label">Plantilla 4 · Producto en escena festiva</span>
+    <span class="prompt-text">[TIPO DE PRODUCTO] de [COLOR] presentado en [Caja navideña / empaque de regalo / canasta] sobre [MESA DE MADERA / MANTEL ROJO], rodeado de [elementos decorativos: luces cálidas, hojas verdes, cinta dorada], iluminación cálida tipo vela, ángulo [CENITAL 45° / FRONTAL], estética acogedora festiva, alta resolución, foco en producto.</span>
+</div>
+
+<div class="prompt-box cyan">
+    <span class="prompt-label cyan">Plantilla 5 · Producto en oferta / promoción</span>
+    <span class="prompt-text">[TIPO DE PRODUCTO] de [COLOR] con etiqueta visible de oferta [DESCUENTO: -20% / 2x1], sobre fondo [AMARILLO / TURQUESA] vibrante, iluminación frontal uniforme, ángulo frontal, estética comercial llamativa tipo banner publicitario, alta resolución, foco nítido, espacio superior para texto promocional, colores saturados.</span>
+</div>
+
+<div class="card yellow">
+    <div class="card-title">Cómo adaptar las plantillas a tu producto</div>
+    <p class="card-text">Si vendes <strong>bisutería</strong>: usa Plantillas 1, 3 y 5. Si vendes <strong>comida/desayunos</strong>: usa Plantillas 2 y 4. Si vendes <strong>ropa</strong>: usa Plantillas 1, 2 y 3. Si vendes <strong>decoración/manualidades</strong>: usa Plantillas 1, 4 y 5. La regla general es: <em>una foto de catálogo (1), una de uso real (2), y una de oferta (5)</em> como mínimo para tu lanzamiento.</p>
+</div>
+
+<div class="exercise">
+    <div class="exercise-label">Mini-Reto 5</div>
+    <p class="exercise-text">Elige 2 plantillas según tu tipo de producto. Rellena los campos con tus datos. Pega cada prompt en Nano Banana (Google AI Studio) o en ChatGPT con GPT Image 1. Guarda las 2 versiones generadas y compáralas con las fotos originales. ¿Cuál te gusta más? Esa será la primera foto de tu catálogo.</p>
+</div>
+
+<!-- ===== CHAPTER 4 PART 1: VIDEO IA - SEEDANCE 2.0 EN CAPCUT ===== -->
+<div class="chapter-header">
+    <span class="chapter-tag purple">Capítulo 4 · Parte 1</span>
+    <h2 class="chapter-title">Videos con IA: Seedance 2.0 en CapCut</h2>
+    <p class="chapter-subtitle">La forma más simple de generar videos de producto profesionales desde tu celular o computadora.</p>
+    <div class="divider"></div>
+</div>
+
+<p class="body-text">Si la foto de tu producto es importante, el video es <strong>obligatorio</strong>. Según el <strong>Wyzowl Video Marketing Statistics 2025</strong>, el <strong>91% de las businesses</strong> usa video como herramienta de marketing, y el <strong>87% de los consumidores</strong> afirma que un video los ha convencido de comprar un producto. El <strong>HubSpot State of Marketing 2025</strong> complementa: las publicaciones con video en Instagram tienen <strong>38% más alcance</strong> que las que solo tienen foto, y en TikTok los videos de producto de menos de 30 segundos tienen el triple de probabilidad de volverse virales. La buena noticia es que en 2025 ya no necesitas cámara profesional: una sola herramienta — <strong>CapCut con Seedance 2.0</strong> — hace todo.</p>
+
+<div class="callout">
+    <div class="callout-title">El combo ganador de 2025</div>
+    <p class="callout-text"><strong>Seedance 2.0</strong> es el modelo de IA generativa de video de ByteDance (dueña de TikTok), lanzado globalmente dentro de CapCut/Dreamina en 2025. Convierte una foto estática de tu producto en un video cinematográfico de 5-10 segundos, sin salirte de la app que ya conoces.</p>
+</div>
+
+<div class="subhead">Herramienta 1: CapCut con Seedance 2.0 (web, desktop y móvil)</div>
+
+<p class="body-text">CapCut ofrece Seedance 2.0 en <strong>tres versiones</strong>: (1) <strong>CapCut Web</strong> (capcut.com, ideal si solo tienes celular y navegador), (2) <strong>CapCut Desktop</strong> (app para Windows/Mac, más rápida y con más opciones), y (3) <strong>CapCut Mobile</strong> (app iOS/Android, donde tienes acceso a plantillas y edición, aunque la generación directa con Seedance 2.0 está disponible a través de la sección "Dreamina" integrada). Para vendedoras que recién empiezan, recomendamos <strong>CapCut Web</strong>: no requiere instalar nada y funciona igual en celular o PC.</p>
+
+<div class="card">
+    <div class="card-title">Costos y límites de CapCut + Seedance 2.0 (2025)</div>
+    <p class="card-text"><strong>Gratis al registrarte:</strong> 225 créditos iniciales + créditos diarios por iniciar sesión (alcanza para ~1-2 videos de prueba). <strong>Cuándo cobran:</strong> cada video de 5s en Seedance 2.0 cuesta ~255 créditos (~USD $2.45). Cuando se acaban tus créditos gratis, debes comprar un plan Pro: USD $9.99/mes (CapCut Pro estándar) o USD $19.99/mes (CapCut Pro completo con todas las IA). Existe una versión <strong>Seedance 2.0 Mini</strong> que gasta 33% menos créditos (promo activa junio-julio 2025), ideal para pruebas. No pide tarjeta para la cuenta gratis.</p>
+</div>
+
+<ol class="steps">
+    <li><strong>Entra a capcut.com</strong> (web) o abre la app CapCut en tu celular. Inicia sesión con Google, TikTok o correo. Te regalan <strong>225 créditos iniciales</strong>.</li>
+    <li><strong>Ve a "AI Video" o "Dreamina"</strong>: en la web es una pestaña del menú principal; en la app móvil está dentro de "Herramientas IA". Busca el modelo <strong>"Seedance 2.0"</strong> (o "Seedance 2.0 Mini" para ahorrar créditos).</li>
+    <li><strong>Sube la foto</strong> de tu producto (la que mejoraste con Nano Banana o Photoroom en el Capítulo 3). Elige "Image to Video".</li>
+    <li><strong>Escribe el prompt</strong> describiendo el movimiento. Ej: "producto girando 360° suavemente sobre fondo blanco, iluminación cinematográfica, cámara orbitando lentamente".</li>
+    <li><strong>Configura</strong>: duración 5s, aspect ratio 9:16 (vertical para Reels/TikTok) o 1:1 (feed cuadrado), resolución 720p (gasta menos) o 1080p (mejor calidad).</li>
+    <li><strong>Pulsa "Generate"</strong> y espera 1-3 minutos. CapCut te entrega 1-2 versiones para elegir. Descarga el MP4.</li>
+</ol>
+
+<div class="prompt-box">
+    <span class="prompt-label">Seedance 2.0 · Plantilla rotación 360°</span>
+    <span class="prompt-text">[TIPO DE PRODUCTO] de [COLOR/MATERIAL] girando lentamente 360 grados sobre [SUPERFICIE: pedestal blanco / mesa de mármol], fondo [BLANCO LISO / COLOR PASTEL], iluminación de estudio cinematográfica suave, cámara orbitando en círculo a velocidad media, foco siempre en el producto, alta calidad, 5 segundos.</span>
+</div>
+
+<div class="prompt-box cyan">
+    <span class="prompt-label cyan">Seedance 2.0 · Plantilla zoom in</span>
+    <span class="prompt-text">[TIPO DE PRODUCTO] de [COLOR] visto desde lejos, la cámara se acerca suavemente hasta un close-up del detalle de [PARTE DEL PRODUCTO: dije / bordado / textura], fondo desenfocado estilo bokeh, luz natural cálida, movimiento cinematográfico lento, 5 segundos.</span>
+</div>
+
+<div class="prompt-box yellow">
+    <span class="prompt-label yellow">Seedance 2.0 · Plantilla producto en uso</span>
+    <span class="prompt-text">Una mano femenina joven toma [TIPO DE PRODUCTO] de [COLOR] de una superficie de [MATERIAL: madera/mármol], lo sostiene en primer plano mostrando el detalle, fondo suave desenfocado de [PLANTA / LIBROS / TELA], luz natural cálida de ventana, movimiento natural y suave, 5 segundos.</span>
+</div>
+
+<div class="card cyan">
+    <div class="card-title">Consejo pro para Seedance 2.0</div>
+    <p class="card-text">Si el primer resultado no te convence, <strong>no borres el video</strong>. Cambia una sola palabra del prompt (por ejemplo, "rápido" en vez de "lento", o "tarde dorada" en vez de "luz natural") y vuelve a generar. La IA interpreta cada palabra distinto, y un pequeño cambio puede dar un resultado totalmente diferente. Guarda los 3 mejores y elige uno. Recuerda usar Seedance 2.0 Mini para pruebas baratas y el modelo completo solo para el video final.</p>
+</div>
+
+<!-- ===== CHAPTER 4 PART 2: VEO + KLING + CAPCUT EDICIÓN ===== -->
+<div class="chapter-header">
+    <span class="chapter-tag purple">Capítulo 4 · Parte 2</span>
+    <h2 class="chapter-title">Alternativas: Veo y Kling AI + edición final en CapCut</h2>
+    <p class="chapter-subtitle">Dos opciones más para generar videos, más cómo unirlo todo en CapCut y publicar.</p>
+    <div class="divider"></div>
+</div>
+
+<div class="subhead">Herramienta 2: Google Veo (gratis con cuenta Google)</div>
+
+<p class="body-text"><strong>Google Veo</strong> (disponible en Google AI Studio - aistudio.google.com) es el modelo de generación de video de Google, competencia directa de Sora de OpenAI. Su gran ventaja es que es <strong>completamente gratis con tu cuenta Google</strong> (Gmail) y produce videos de calidad cinematográfica. Ideal para productos que necesitan contexto: comida siendo servida, ropa siendo modelada, cosmética siendo aplicada. La limitación: la versión gratis tiene una cola de espera de 2-10 minutos por video y un límite diario de solicitudes que varía según la demanda.</p>
+
+<ol class="steps">
+    <li><strong>Entra a aistudio.google.com</strong> con tu cuenta Gmail. Es 100% gratis, sin créditos.</li>
+    <li><strong>En el menú izquierdo, elige "Video" o "Veo"</strong>. Si no lo ves, busca "Generate Video" en la galería.</li>
+    <li><strong>Modo</strong>: "Text to Video" (escribes el prompt) o "Image to Video" (subes una foto).</li>
+    <li><strong>Escribe el prompt</strong> en inglés o español (Veo entiende ambos). Sé muy específica: describe la escena completa, la cámara, la iluminación y el movimiento.</li>
+    <li><strong>Aspect ratio</strong>: 9:16 vertical para redes, 16:9 horizontal para YouTube.</li>
+    <li><strong>Click en "Run"</strong>. Espera 3-10 minutos. Descarga el video.</li>
+</ol>
+
+<div class="prompt-box cyan">
+    <span class="prompt-label cyan">Google Veo · Plantilla cinematográfica</span>
+    <span class="prompt-text">Cinematic shot of [TIPO DE PRODUCTO] of [COLOR] on a [SUPERFICIE] surface, soft natural window light from the left, slow camera pan around the product showing all details, shallow depth of field with bokeh background, professional product photography, 4K quality, 5 seconds, vertical format.</span>
+</div>
+
+<div class="prompt-box yellow">
+    <span class="prompt-label yellow">Google Veo · Plantilla producto en escena</span>
+    <span class="prompt-text">Una joven modelo sostiene [TIPO DE PRODUCTO] de [COLOR] frente a la cámara, sonríe, fondo de habitación luminosa con plantas, luz natural dorada de tarde, cámara fija en close-up, estética editorial juvenil tipo TikTok, 5 segundos, vertical.</span>
+</div>
+
+<div class="subhead">Herramienta 3: Kling AI - Créditos diarios gratis</div>
+
+<p class="body-text"><strong>Kling AI</strong> (klingai.com) es una plataforma china de generación de video que se ha vuelto viral en 2024-2025 por su impresionante calidad. Te regala <strong>66 créditos diarios gratis al registrarte</strong> (alcanza para ~6 videos de 5 segundos cada uno en modo Standard). Su fortaleza es <strong>transformar fotos en videos realistas</strong> con movimiento natural, especialmente bueno para productos de moda, comida y cosmética. <strong>Cuándo cobran:</strong> si quieres resolución 1080p, modo Professional o más videos al día, los planes pagos empiezan en USD $10/mes.</p>
+
+<ol class="steps">
+    <li><strong>Entra a klingai.com</strong> y regístrate con tu correo. Te dan 66 créditos diarios gratis renovables.</li>
+    <li><strong>Elige "Image to Video"</strong> en el menú principal. Sube la foto mejorada de tu producto.</li>
+    <li><strong>Configura el modo</strong>: "Standard" (gasta menos créditos) o "Professional" (mejor calidad, gasta más). Para empezar usa Standard.</li>
+    <li><strong>Aspect ratio</strong>: 9:16 para Reels/TikTok/Stories, o 1:1 para feed cuadrado.</li>
+    <li><strong>Escribe el prompt</strong> describiendo la acción. Ej: "una mano femenina toma el collar de la mesa y lo sostiene en primer plano, fondo suave de planta verde".</li>
+    <li><strong>Click en "Generate"</strong>. Espera 2-5 minutos. Descarga el MP4.</li>
+</ol>
+
+<div class="prompt-box">
+    <span class="prompt-label">Kling · Plantilla producto girando</span>
+    <span class="prompt-text">[TIPO DE PRODUCTO] de [COLOR] sobre superficie plana, gira lentamente mostrando todos sus ángulos, fondo neutro de [COLOR], luz de estudio suave, cámara fija, producto siempre en foco, movimiento fluido y profesional, 5 segundos, estética de catálogo.</span>
+</div>
+
+<div class="subhead">Herramienta 4: CapCut para editar y publicar (la app que ya conoces)</div>
+
+<p class="body-text">Ya generaste tu video de 5s con Seedance, Veo o Kling. Ahora falta el toque final: <strong>editar, agregar texto y música, y publicar</strong>. Para eso usas la app gratuita de CapCut en tu celular. Lo que muchas no saben es que tiene <strong>funciones de IA integradas gratis</strong>: <strong>Auto-edit</strong> (subes varios clips y la IA los une con música trending y transiciones), <strong>subtítulos automáticos</strong> (transcribe tu voz o genera títulos), y <strong>plantillas virales</strong> (plantillas de Reels/TikTok que se editan solas con tus fotos). Funciona 100% desde el celular.</p>
+
+<ol class="steps">
+    <li><strong>Abre CapCut</strong> en tu celular (descárgala gratis de Play Store o App Store). La cuenta gratis incluye edición básica con marca de agua al final.</li>
+    <li><strong>Importa tu video IA</strong> (el de 5s que generaste con Seedance/Veo/Kling). Pulsa "Nuevo proyecto" y selecciónalo.</li>
+    <li><strong>Agrega texto</strong>: pulsa "Texto" → "Agregar texto". Escribe tu precio + llamado a la acción ("S/35 — Escríbeme al WhatsApp 🌸"). Elige una fuente llamativa y posiciónala abajo.</li>
+    <li><strong>Agrega música trending</strong>: pulsa "Audio" → "Sonidos". Busca una canción en tendencia (CapCut te muestra las más usadas). Recorta para que dure lo mismo que tu video.</li>
+    <li><strong>Para Auto-edit</strong>: si tienes varios clips, usa la función "Auto-edit" del menú principal. La IA elige los mejores momentos, les pone transiciones y música automáticamente en 1 minuto.</li>
+    <li><strong>Exporta en 1080p</strong> (gratis, sin marca de agua en la mayoría de casos) o 4K (algunas funciones requieren Pro). 1080p es suficiente para redes sociales.</li>
+</ol>
+
+<div class="prompt-box">
+    <span class="prompt-label">CapCut · Texto sobre video (rellenable)</span>
+    <span class="prompt-text">Línea 1 (arriba, grande): [NOMBRE DEL PRODUCTO] · S/[PRECIO]<br>Línea 2 (abajo, mediana): Escríbeme al WhatsApp para reservar 🌸<br>Línea 3 (centro, al final, parpadeante): Solo [NÚMERO] unidades disponibles</span>
+</div>
+
+<div class="subhead">Comparativa final 2025: ¿qué herramienta usar y cuándo?</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+    <th style="width:14%">Herramienta</th>
+    <th style="width:18%">Mejor para</th>
+    <th style="width:22%">Costo gratis 2025</th>
+    <th style="width:14%">Desde celular</th>
+    <th style="width:32%">Cuándo usarla</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <td class="td-strong">CapCut + Seedance 2.0</td>
+    <td>Animar foto estática</td>
+    <td>225 créditos iniciales + diarios por login</td>
+    <td>Web + app</td>
+    <td>Flujo principal: generar + editar en un solo lugar</td>
+</tr>
+<tr>
+    <td class="td-strong">Google Veo</td>
+    <td>Calidad cinematográfica</td>
+    <td>Gratis c/Google (cola 2-10 min)</td>
+    <td>Web</td>
+    <td>Videos de marca y lanzamientos importantes</td>
+</tr>
+<tr>
+    <td class="td-strong">Kling AI</td>
+    <td>Manos/uso realista</td>
+    <td>66 créditos diarios</td>
+    <td>Web</td>
+    <td>Producto siendo usado por una mano o persona</td>
+</tr>
+<tr>
+    <td class="td-strong">CapCut (edición)</td>
+    <td>Editar + plantillas</td>
+    <td>Cuenta gratis con marca de agua final</td>
+    <td>App + web</td>
+    <td>Unir clips, agregar texto, música y subtítulos</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="card purple">
+    <div class="card-title">El flujo de trabajo ideal (en 15 minutos)</div>
+    <p class="card-text">Toma tu foto mejorada con Nano Banana → súbelo a CapCut Web con Seedance 2.0 para crear 1 video de 5s con movimiento → descárgalo → ábrelo en la app móvil de CapCut, agrégale texto con precio y un llamado a la acción + música trending → exporta en 1080p → publica como Reel. Tienes un Reel profesional en menos de 15 minutos, sin cámara, sin editor, sin pagar nada. Si se acaban los créditos gratis de Seedance, usa Google Veo como alternativa gratuita.</p>
+</div>
+
+<div class="exercise">
+    <div class="exercise-label">Mini-Reto 6</div>
+    <p class="exercise-text">Genera tu primer video de producto: usa una foto mejorada del Capítulo 3, súbelo a CapCut Web con Seedance 2.0 (o a Google Veo si prefieres no gastar créditos), descarga el MP4. Ábrelo en la app móvil de CapCut, agrégale texto con tu precio y un llamado a la acción. Tienes tu primer Reel listo para publicar.</p>
+</div>
+
+<!-- ===== CHAPTER 5 PART 1: WHATSAPP BUSINESS ===== -->
+<div class="chapter-header">
+    <span class="chapter-tag">Capítulo 5 · Parte 1</span>
+    <h2 class="chapter-title">WhatsApp Business: tu vendedora 24/7</h2>
+    <p class="chapter-subtitle">Por qué WhatsApp Business App (gratis) es mejor que WhatsApp normal para vender.</p>
+    <div class="divider"></div>
+</div>
+
+<p class="body-text">En Perú, <strong>WhatsApp no es una app de mensajería: es la principal plataforma de ventas</strong>. Según un estudio de la Cámara de Comercio de Lima (2024), el 78% de las compras online pequeñas se cierran por WhatsApp. La diferencia entre usar WhatsApp normal y WhatsApp Business es enorme: Business te da <strong>catálogo de productos, mensajes automáticos, etiquetas, horario de atención y estadísticas</strong>, todo gratis. Si todavía no lo tienes, este capítulo cambiará tu forma de vender.</p>
+
+<div class="subhead">Paso 1: Instalar WhatsApp Business</div>
+
+<p class="body-text">WhatsApp Business es una app <strong>gratuita y oficial de Meta</strong> (no es pirata ni de terceros). La descargas del Play Store o App Store. Importante: <strong>puedes tener WhatsApp normal y WhatsApp Business en el mismo celular</strong>, cada uno con su propio número. Si no tienes otro número, puedes usar tu mismo número, pero perderás el WhatsApp normal. La opción más económica para tener dos números es comprar un chip prepago por S/5.</p>
+
+<ol class="steps">
+    <li><strong>Descarga "WhatsApp Business"</strong> de Play Store o App Store. Es la app con ícono verde con una "B".</li>
+    <li><strong>Abre la app y verifica tu número</strong> con el código SMS que recibes. Si usas el mismo número de tu WhatsApp normal, este se desactivará automáticamente.</li>
+    <li><strong>Completa tu perfil comercial</strong>: nombre del negocio (ej: "Bisutería Sofi"), categoría (ej: "Tienda de bisutería"), descripción (ej: "Bisutería hecha a mano en Lima. Envíos a todo el país"), foto (tu logo o foto de producto), dirección (opcional, ciudad es suficiente al inicio).</li>
+    <li><strong>Configura el horario de atención</strong>: esto es crucial para los mensajes automáticos. Ej: Lun-Sáb 9am-8pm.</li>
+</ol>
+
+<div class="subhead">Paso 2: Crear tu catálogo de productos</div>
+
+<p class="body-text">El catálogo es la función más poderosa de WhatsApp Business. Te permite <strong>subir hasta 500 productos con foto, nombre, descripción y precio</strong>. Cuando un cliente te escriba, podrá ver todos tus productos sin pedirte fotos una por una. Para crearlo: ve a "Configuración" → "Catálogo" → toca el botón "+" → agrega nombre del producto, precio, foto y descripción. Tómate 30 minutos en subir tus 5-10 productos principales. Es la mejor inversión de tu tiempo.</p>
+
+<div class="card">
+    <div class="card-title">Truco: foto del catálogo optimizada</div>
+    <p class="card-text">WhatsApp comprime las fotos del catálogo. Usa <strong>fotos cuadradas (1:1) de mínimo 800x800px</strong>, fondo blanco y producto bien iluminado (las mismas fotos que mejoraste con Photoroom). Si la foto es oscura o borrosa, el cliente pensará que el producto es de mala calidad.</p>
+</div>
+
+<div class="subhead">Paso 3: Configurar mensajes automáticos</div>
+
+<p class="body-text">Esta es la función que te ahorrará más tiempo y te hará parecer profesional. WhatsApp Business permite configurar <strong>dos tipos de mensajes automáticos</strong>: (1) <strong>Mensaje de bienvenida</strong>: se envía solo cuando alguien te escribe por primera vez. (2) <strong>Mensaje de ausencia</strong>: se envía cuando te escriben fuera de tu horario de atención. Ambos se configuran en "Configuración" → "Herramientas empresariales" → "Mensaje de bienvenida" / "Mensaje de ausencia".</p>
+
+<div class="prompt-box yellow">
+    <span class="prompt-label yellow">Mensaje de bienvenida (copia y pega)</span>
+    <span class="prompt-text">¡Hola! 💕 Bienvenida a [TU MARCA]. Soy [TU NOMBRE] y vendo [TU PRODUCTO]. Ya mismo te respondemos, mientras tanto puedes ver nuestro catálogo aquí 👉 [LINK DEL CATÁLOGO] o escribirnos qué producto te interesa. ¡Gracias por escribirnos! 🌸</span>
+</div>
+
+<div class="prompt-box">
+    <span class="prompt-label">Mensaje de ausencia (copia y pega)</span>
+    <span class="prompt-text">¡Hola! 💕 Gracias por escribir a [TU MARCA]. Ahora mismo estamos fuera de horario (atendemos Lun-Sáb 9am-8pm). Tu mensaje es importante para nosotros y te responderemos lo primero mañana. Mientras tanto, puedes ver nuestro catálogo aquí 👉 [LINK]. ¡Buen día! 🌸</span>
+</div>
+
+<div class="subhead">Paso 4: Organizar clientes con etiquetas</div>
+
+<p class="body-text">WhatsApp Business te permite <strong>etiquetar conversaciones</strong> con colores para organizar tus clientes. Las etiquetas por defecto son: <strong>Pedido nuevo</strong> (azul), <strong>Pendiente de pago</strong> (morado), <strong>Pagado</strong> (verde), <strong>Pedido completado</strong> (gris). Para etiquetar una conversación: ábrela → toca los 3 puntos arriba → "Etiquetar conversación". Esto te permite saber en un vistazo quién te debe, quién ya pagó y quién está esperando pedido. Cuando tengas 20 clientes activos, las etiquetas serán tu salvación.</p>
+
+<div class="exercise">
+    <div class="exercise-label">Mini-Reto 7</div>
+    <p class="exercise-text">Descarga WhatsApp Business, completa tu perfil comercial (nombre, categoría, descripción, foto, horario), sube 3 productos a tu catálogo con fotos mejoradas, y configura tu mensaje de bienvenida con la plantilla de arriba. Pídele a una amiga que te escriba para probar que todo funcione.</p>
+</div>
+
+<!-- ===== CHAPTER 5 PART 2: PLANTILLAS WHATSAPP ===== -->
+<div class="chapter-header">
+    <span class="chapter-tag">Capítulo 5 · Parte 2</span>
+    <h2 class="chapter-title">5 plantillas de WhatsApp que cierran ventas</h2>
+    <p class="chapter-subtitle">Mensajes listos para copiar y pegar, más respuestas rápidas y el consejo de oro.</p>
+    <div class="divider"></div>
+</div>
+
+<p class="body-text">Un buen mensaje de WhatsApp puede ser la diferencia entre una venta y un cliente que se va. Las plantillas que verás a continuación están probadas por vendedoras peruanas y tienen tasas de respuesta del 70%+. Adapta el tono a tu marca, pero mantén la estructura: <strong>saludo cálido + información útil + pregunta que invita a responder</strong>. No olvides configurar las 5 como "Respuestas rápidas" en tu WhatsApp Business para acceder a ellas con solo escribir "/" y una palabra clave.</p>
+
+<div class="prompt-box">
+    <span class="prompt-label">Plantilla 1 · Respuesta a "¿Precio?"</span>
+    <span class="prompt-text">¡Hola hermosa! 💕 El [NOMBRE DEL PRODUCTO] cuesta S/[PRECIO]. Incluye [BONUS: caja / envoltura / garantía]. Tenemos disponible en [COLORES/VARIANTES]. ¿Te gustaría reservarlo? Hacemos envíos a todo Lima por S/5 🚚</span>
+</div>
+
+<div class="prompt-box cyan">
+    <span class="prompt-label cyan">Plantilla 2 · Confirmación de pedido</span>
+    <span class="prompt-text">¡Perfecto! 🎉 Tu pedido está confirmado:<br>📌 [PRODUCTO 1] - S/[PRECIO]<br>📌 [PRODUCTO 2] - S/[PRECIO]<br>🚚 Envío a [DISTRITO] - S/[COSTO]<br>💰 TOTAL: S/[TOTAL]<br><br>Para reservarlo, transferencia a [Banco/Yape/Plin] al [NÚMERO]. ¿Te lo separo por 24 horas? ⏰</span>
+</div>
+
+<div class="prompt-box yellow">
+    <span class="prompt-label yellow">Plantilla 3 · Agradecimiento + reseña</span>
+    <span class="prompt-text">¡Mil gracias por tu compra! 💖 Esperamos que ames tu [PRODUCTO] tanto como nosotros amamos hacerlo. Cuando lo recibas, ¿nos ayudas con una foto o reseñita? 📸 Nos ayudaría muchísimo a crecer. Y si etiquetas a @tu_marca en tus Stories, te compartimos 🌸</span>
+</div>
+
+<div class="prompt-box">
+    <span class="prompt-label">Plantilla 4 · Oferta flash / lanzamiento</span>
+    <span class="prompt-text">¡ATENCIÓN! 🔥 Lanzamiento de [NUEVO PRODUCTO/COLLECCIÓN] con <strong>-20% descuento solo por 48 horas</strong> para mis clientas fieles. Solo tengo [NÚMERO] unidades. ¿Te aparto una? Responde "SÍ" + tu color favorito y te lo reservo 🌸 Precio normal S/[X] → hoy S/[Y]</span>
+</div>
+
+<div class="prompt-box cyan">
+    <span class="prompt-label cyan">Plantilla 5 · Recordatorio / seguimiento</span>
+    <span class="prompt-text">¡Hola! 💕 Te escribo de [TU MARCA]. Viste nuestro [PRODUCTO] el [FECHA] y no queríamos que te lo pierdas 😊 Seguimos teniendo disponibilidad en [COLOR]. ¿Te interesa reservarlo o ver más fotos? Sin compromiso. ¡Que tengas lindo día! 🌸</span>
+</div>
+
+<div class="subhead">Cómo configurar respuestas rápidas (1 minuto)</div>
+
+<ol class="steps">
+    <li><strong>En WhatsApp Business, ve a Configuración</strong> → "Herramientas empresariales" → "Respuestas rápidas".</li>
+    <li><strong>Toca el botón "+"</strong> para crear una nueva respuesta rápida.</li>
+    <li><strong>Escribe el atajo</strong> (ej: "/precio") y el mensaje completo que quieres que aparezca.</li>
+    <li><strong>Guarda</strong>. Repite para las 5 plantillas de arriba (atajos: /precio, /pedido, /gracias, /oferta, /seguimiento).</li>
+    <li><strong>Para usarlas</strong>: en cualquier chat, escribe "/" y aparecerá la lista. Toca la que necesites y se enviará automáticamente.</li>
+</ol>
+
+<div class="callout">
+    <div class="callout-title">Consejo de oro: respuesta en menos de 5 minutos</div>
+    <p class="callout-text">Según HubSpot, responder en menos de 5 minutos multiplica por 8 la probabilidad de cerrar la venta. WhatsApp Business te avisa con notificación de cada mensaje. Configura tu teléfono para que las notificaciones de WhatsApp suenen siempre. Tu competencia tarda 2 horas en responder; tú respondes en 2 minutos. Esa es la diferencia entre crecer o morir.</p>
+</div>
+
+<div class="exercise">
+    <div class="exercise-label">Mini-Reto 8</div>
+    <p class="exercise-text">Configura las 5 plantillas como respuestas rápidas en tu WhatsApp Business (atajos: /precio, /pedido, /gracias, /oferta, /seguimiento). Personaliza cada una con el nombre de tu marca y tus precios reales. Pídele a una amiga que te haga las 5 preguntas típicas y responde con las plantillas. Practica hasta que lo hagas en menos de 10 segundos por mensaje.</p>
+</div>
+
+<!-- ===== CHECKLIST FINAL + PLANTILLA MAESTRA ===== -->
+<div class="chapter-header" style="margin-top: 12px; margin-bottom: 8px;">
+    <span class="chapter-tag yellow">Cierre</span>
+    <h2 class="chapter-title" style="font-size: 22px;">Checklist final y plantilla maestra</h2>
+    <div class="divider" style="margin-bottom: 12px;"></div>
+</div>
+
+<p class="body-text" style="margin-bottom: 4px;">El siguiente checklist te lleva, paso a paso, desde la preparación hasta tu primera venta. Marca cada casilla conforme avances y celebra cada logro.</p>
+
+<div class="checklist-group">
+    <div class="checklist-group-title">1. Preparación (Día 1) · 2. Redes sociales (Día 2)</div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Definí mi producto, precio y nombre de marca</div></div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Investigué 3 cuentas competidoras y definí mi horario de atención</div></div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Creé/mejoré mi perfil de Instagram con biografía completa</div></div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Subí mi primera foto de producto al feed (usando plantilla 1)</div></div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Planifiqué mis próximos 3 posts (producto, educación, oferta)</div></div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Escribí mi lista de 8 hashtags locales listos para usar</div></div>
+</div>
+
+<div class="checklist-group">
+    <div class="checklist-group-title">3. Fotos mejoradas con IA (Día 3) · 4. Video con IA (Día 4)</div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Tomé 5 fotos de mis productos con luz natural y fondo limpio</div></div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Subí 3 fotos a Photoroom y les puse fondo profesional</div></div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Probé 2 plantillas de prompts de fotos del Capítulo 3</div></div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Creé cuenta en Kling AI y generé mi primer video de 5 segundos</div></div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Abrí el video en CapCut, agregué texto + música y exporté mi primer Reel</div></div>
+</div>
+
+<div class="checklist-group">
+    <div class="checklist-group-title">5. WhatsApp Business (Día 5)</div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Descargué WhatsApp Business y completé mi perfil comercial</div></div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Subí al menos 5 productos a mi catálogo con fotos mejoradas</div></div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Configuré mi mensaje de bienvenida automático</div></div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Configuré las 5 plantillas como respuestas rápidas (/precio, /pedido, /gracias, /oferta, /seguimiento)</div></div>
+    <div class="checklist-item"><div class="checklist-box"></div><div>Probé todo con una amiga enviándome mensajes</div></div>
+</div>
+
+<div class="prompt-box">
+    <span class="prompt-label">Plantilla maestra universal (fotos y videos)</span>
+    <span class="prompt-text">[TIPO DE PRODUCTO] de [COLOR/MATERIAL] [en uso / sobre fondo COLOR], con [luz natural / luz de estudio], desde [ángulo frontal / cenital / 360°], estilo [minimalista / lifestyle / premium], [alta resolución / video 5s / movimiento suave]. Para [Instagram / TikTok / catálogo WhatsApp].</span>
+</div>
+
+<div class="callout">
+    <div class="callout-title">Tu primer cliente te está esperando</div>
+    <p class="callout-text">Publica tu primer Reel hoy mismo. La perfección es enemiga del progreso. Tus 3 mini-retos: (1) subir primer producto, (2) publicar primer Reel, (3) configurar WhatsApp Business. ¡Lánzate!</p>
+</div>
+
+</div>
+<!-- END main-content -->
+
+<!-- ============ ENDING: FUENTES Y REFERENCIAS ============ -->
+<div class="ending">
+<div class="chapter-header">
+    <span class="chapter-tag">Fuentes</span>
+    <h2 class="chapter-title">Fuentes y referencias</h2>
+    <p class="chapter-subtitle">Todas las fuentes citadas en esta guía, organizadas por categoría. Consulta original para profundizar.</p>
+    <div class="divider"></div>
+</div>
+
+<div class="ref-category">Estadísticas de comercio digital y redes sociales</div>
+<ol class="ref-list">
+    <li><strong>Statista Research Department (2024).</strong> Global retail e-commerce sales 2014-2027. Statista. Disponible en: statista.com/statistics/379046/worldwide-retail-e-commerce-sales</li>
+    <li><strong>We Are Social &amp; Meltwater (2024).</strong> Digital 2024: Global Overview Report. Disponible en: wearesocial.com/global-digital-report</li>
+    <li><strong>Comisión Económica para América Latina y el Caribe - CEPAL (2024).</strong> Economy Report 2024: Latin America's Digital Commerce. Disponible en: cepal.org</li>
+    <li><strong>Instituto Nacional de Estadística e Informática - INEI (2024).</strong> Comercio electrónico en Perú 2024. Reporte técnico. Lima: INEI.</li>
+    <li><strong>Hootsuite Inc. (2024).</strong> Social Media Trends Report 2024: Micro-influencer engagement by audience size. Disponible en: hootsuite.com/resources/reports/social-media-trends-report</li>
+    <li><strong>Cámara de Comercio de Lima (2024).</strong> Estudio sobre comercio electrónico y micronegocios en Perú 2024. Lima: CCL.</li>
+</ol>
+
+<div class="ref-category">Marketing en redes sociales y comportamiento del consumidor</div>
+<ol class="ref-list" start="7">
+    <li><strong>HubSpot Inc. (2025).</strong> State of Marketing 2025: Lead response time, video reach and conversion rates. Disponible en: hubspot.com/state-of-marketing</li>
+    <li><strong>Wyzowl (2025).</strong> Video Marketing Statistics 2025: 91% of businesses use video, 87% of consumers convinced to buy by video. Disponible en: wyzowl.com/video-marketing-statistics</li>
+    <li><strong>Statista Research Department (2025).</strong> Average e-commerce conversion rate by category 2025. Statista. Disponible en: statista.com</li>
+    <li><strong>Sprout Social (2024).</strong> Social Media Commerce Report: Consumer buying behavior on Instagram, TikTok and Facebook. Disponible en: sproutsocial.com/insights/social-media-commerce</li>
+    <li><strong>Meta Platforms Inc. (2024).</strong> WhatsApp Business App Official Documentation. Disponible en: business.whatsapp.com/developers/developer-hub</li>
+</ol>
+
+<div class="ref-category">Herramientas de IA para generación y edición de imágenes (2025)</div>
+<ol class="ref-list" start="12">
+    <li><strong>Google (2025).</strong> Introducing Gemini 2.5 Flash Image ("Nano Banana"). Google Developers Blog. Disponible en: developers.googleblog.com/en/introducing-gemini-2-5-flash-image</li>
+    <li><strong>Google AI for Developers (2025).</strong> Gemini API Pricing &amp; Free Tier Rate Limits (Nano Banana ~25 RPD). Disponible en: ai.google.dev/gemini-api/docs/pricing</li>
+    <li><strong>OpenAI (2025).</strong> GPT Image 1 API Pricing &amp; ChatGPT Free Tier Limits. Disponible en: openai.com/api/pricing</li>
+    <li><strong>Photoroom (2025).</strong> Photoroom Plans: Free 250 exports/month, Pro $9.99/mes, Max $19.99/mes. Disponible en: photoroom.com/plans</li>
+    <li><strong>Canva Pty Ltd (2025).</strong> Magic Studio Documentation: 50 free AI uses/month, Pro $12.99/mes. Disponible en: canva.com/magic-studio</li>
+</ol>
+
+<div class="ref-category">Herramientas de IA para generación de video (2025)</div>
+<ol class="ref-list" start="17">
+    <li><strong>ByteDance (2025).</strong> Dreamina Seedance 2.0 — CapCut Official Launch Announcement. Disponible en: capcut.com/newsroom/dreamina-seedance-2</li>
+    <li><strong>CapCut (2025).</strong> Dreamina Seedance 2.0 AI Video Generator (web, desktop, mobile). Disponible en: capcut.com/tools/dreamina-seedance-2-0</li>
+    <li><strong>Atlas Cloud (2026).</strong> Seedance 2.0 Pricing: Full Cost Breakdown — 225 free credits, ~255 créditos por video, Pro $9.99-$19.99/mes. Disponible en: atlascloud.ai/blog/case-studies/seedance-2.0-pricing-full-cost-breakdown-2026</li>
+    <li><strong>Google DeepMind (2025).</strong> Google Veo: Video generation model documentation. Google AI Studio. Disponible en: ai.google.dev/veda/gemini-video-generation</li>
+    <li><strong>Kuaishou Technology (2025).</strong> Kling AI Official Documentation &amp; Prompt Guide — 66 créditos diarios gratis. Disponible en: klingai.com/docs</li>
+    <li><strong>CapCut (2025).</strong> CapCut Plans 2025: Free vs Standard vs Pro ($9.99 vs $19.99). Disponible en: capcut.com/plans</li>
+</ol>
+
+<div class="ref-category">Fotografía de producto con smartphone</div>
+<ol class="ref-list" start="23">
+    <li><strong>Google Photos Team (2023).</strong> Smartphone product photography: Lighting, composition and angles. Google Photography Guide.</li>
+    <li><strong>Shopify (2024).</strong> Product Photography Guide: A beginner's guide to taking product photos with a smartphone. Disponible en: shopify.com/blog/product-photography</li>
+</ol>
+
+<div class="ref-category">Casos de estudio y emprendimiento juvenil en Latam</div>
+<ol class="ref-list" start="25">
+    <li><strong>Malpica, V. (2023).</strong> Cómo empecé a vender en Instagram a los 16. Blog personal. México.</li>
+    <li><strong>Programa Nacional de Becas y Crédito Educativo - PRONABEC (2024).</strong> Casos de emprendimiento juvenil en Perú. Reporte.</li>
+    <li><strong>Naciones Unidas (2023).</strong> Youth Entrepreneurship in Latin America 2023 Report. UNCTAD. Disponible en: unctad.org/topic/entrepreneurship</li>
+</ol>
+
+<div style="margin-top: 18px; padding: 12px 16px; background: linear-gradient(135deg, var(--c-primary-light), var(--c-accent-pink-light)); border-radius: 10px; text-align: center; break-inside: avoid;">
+    <div style="font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 12px; color: var(--c-primary-dark); margin-bottom: 3px;">Guía creada para el Taller de Proyección Social</div>
+    <div style="font-size: 10.5px; color: var(--c-text-muted);">Edición 2025 · Volumen 01 · Para alumnas de 4.° de secundaria</div>
+</div>
+
+</div>
+
+</body>
+</html>

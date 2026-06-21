@@ -3,12 +3,11 @@ import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { SupabaseService, Institucion } from '../../../core/services/supabase.service';
+import { AlertService } from '../../../core/services/alert.service';
 import { 
   LucidePlus, 
   LucideSchool, 
   LucideArrowLeft, 
-  LucideCheckCircle, 
-  LucideAlertCircle, 
   LucideSave, 
   LucidePencil, 
   LucideTrash2, 
@@ -25,8 +24,6 @@ import {
     LucidePlus,
     LucideSchool,
     LucideArrowLeft,
-    LucideCheckCircle,
-    LucideAlertCircle,
     LucideSave,
     LucidePencil,
     LucideTrash2,
@@ -62,21 +59,6 @@ import {
           }
         </div>
       </header>
-
-      <!-- Alertas de Error y Éxito -->
-      @if (errorMessage()) {
-        <div class="error-alert animate-fade-in">
-          <svg lucideAlertCircle></svg>
-          <span>{{ errorMessage() }}</span>
-        </div>
-      }
-
-      @if (successMessage()) {
-        <div class="success-alert animate-fade-in">
-          <svg lucideCheckCircle></svg>
-          <span>{{ successMessage() }}</span>
-        </div>
-      }
 
       <div class="instituciones-layout">
         <!-- SECCIÓN FORMULARIO (Si está abierto) -->
@@ -605,6 +587,7 @@ export class InstitucionesComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private supabaseService = inject(SupabaseService);
+  private alertService = inject(AlertService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
@@ -613,9 +596,6 @@ export class InstitucionesComponent implements OnInit {
   readonly isFormOpen = signal<boolean>(false);
   readonly isEditing = signal<boolean>(false);
   readonly saving = signal<boolean>(false);
-
-  readonly successMessage = signal<string | null>(null);
-  readonly errorMessage = signal<string | null>(null);
 
   schoolForm!: FormGroup;
   editingSchoolId: string | null = null;
@@ -669,7 +649,7 @@ export class InstitucionesComponent implements OnInit {
       this.schools.set(data);
     } catch (err: any) {
       console.error('Error al cargar instituciones:', err);
-      this.errorMessage.set('No se pudieron cargar las instituciones educativas.');
+      this.alertService.error('No se pudieron cargar las instituciones educativas.');
     } finally {
       this.loading.set(false);
       this.cdr.markForCheck();
@@ -711,16 +691,12 @@ export class InstitucionesComponent implements OnInit {
     this.isFormOpen.set(false);
     this.isEditing.set(false);
     this.editingSchoolId = null;
-    this.errorMessage.set(null);
   }
 
   async saveSchool() {
     if (this.schoolForm.invalid) return;
 
     this.saving.set(true);
-    this.errorMessage.set(null);
-    this.successMessage.set(null);
-
     const val = this.schoolForm.value;
     
     const schoolData: Omit<Institucion, 'id'> = {
@@ -737,24 +713,20 @@ export class InstitucionesComponent implements OnInit {
     try {
       if (this.isEditing() && this.editingSchoolId) {
         await this.supabaseService.actualizarInstitucion(this.editingSchoolId, schoolData);
-        this.successMessage.set('Colegio actualizado con éxito.');
+        this.alertService.success('Colegio actualizado con éxito.');
       } else {
         await this.supabaseService.crearInstitucion(schoolData);
-        this.successMessage.set('Colegio creado con éxito.');
+        this.alertService.success('Colegio creado con éxito.');
       }
 
       this.closeForm();
       await this.cargarColegios();
-      
-      // Limpiar alertas de éxito tras 4 segundos
-      setTimeout(() => this.successMessage.set(null), 4000);
     } catch (err: any) {
       console.error(err);
-      this.errorMessage.set(
-        err.message?.includes('duplicate key') 
-          ? 'Ya existe una institución registrada con ese nombre.' 
-          : 'Ocurrió un error al guardar la institución. Inténtalo de nuevo.'
-      );
+      const msg = err.message?.includes('duplicate key') 
+        ? 'Ya existe una institución registrada con ese nombre.' 
+        : 'Ocurrió un error al guardar la institución. Inténtalo de nuevo.';
+      this.alertService.error(msg);
     } finally {
       this.saving.set(false);
       this.cdr.markForCheck();
@@ -762,21 +734,23 @@ export class InstitucionesComponent implements OnInit {
   }
 
   async deleteSchool(id: string) {
-    if (!confirm('¿Estás seguro de que deseas eliminar este colegio? Esta acción es irreversible y borrará los perfiles y productos asociados.')) {
-      return;
-    }
+    const confirmacion = await this.alertService.confirm({
+      title: '¿Eliminar colegio?',
+      message: '¿Estás seguro de que deseas eliminar este colegio? Esta acción es irreversible y borrará los perfiles y productos asociados.',
+      confirmText: 'Sí, eliminar',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
 
-    this.errorMessage.set(null);
-    this.successMessage.set(null);
+    if (!confirmacion) return;
 
     try {
       await this.supabaseService.eliminarInstitucion(id);
-      this.successMessage.set('Colegio eliminado exitosamente.');
+      this.alertService.success('Colegio eliminado exitosamente.');
       await this.cargarColegios();
-      setTimeout(() => this.successMessage.set(null), 4000);
     } catch (err: any) {
       console.error(err);
-      this.errorMessage.set('No se pudo eliminar el colegio. Comprueba que no tenga registros dependientes.');
+      this.alertService.error('No se pudo eliminar el colegio. Comprueba que no tenga registros dependientes.');
     } finally {
       this.cdr.markForCheck();
     }

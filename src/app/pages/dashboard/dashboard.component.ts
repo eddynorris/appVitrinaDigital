@@ -5,6 +5,7 @@ import { CurrencyPipe } from '@angular/common';
 import { AuthService, Perfil } from '../../core/services/auth.service';
 import { SupabaseService, Producto, Categoria } from '../../core/services/supabase.service';
 import { ImageService } from '../../core/services/image.service';
+import { AlertService } from '../../core/services/alert.service';
 import { 
   LucidePlus, 
   LucideUpload, 
@@ -754,6 +755,7 @@ export class DashboardComponent implements OnInit {
   authService = inject(AuthService);
   private supabaseService = inject(SupabaseService);
   private imageService = inject(ImageService);
+  private alertService = inject(AlertService);
   private cdr = inject(ChangeDetectorRef);
 
   readonly user = this.authService.currentUser;
@@ -894,7 +896,7 @@ export class DashboardComponent implements OnInit {
         if (file.type.startsWith('video/')) {
           const maxVideoSize = 15 * 1024 * 1024; // 15MB
           if (file.size > maxVideoSize) {
-            alert(`El video "${file.name}" supera el límite de 15MB. Por favor, comprímelo o recórtalo antes de subirlo.`);
+            this.alertService.warning(`El video "${file.name}" supera el límite de 15MB.`);
             continue;
           }
         }
@@ -910,7 +912,7 @@ export class DashboardComponent implements OnInit {
       }
     } catch (err) {
       console.error('Error al subir archivo:', err);
-      alert('Ocurrió un error al subir el archivo. Verifica tu conexión.');
+      this.alertService.error('Ocurrió un error al subir el archivo. Verifica tu conexión.');
     } finally {
       this.uploadingImage.set(false);
       this.cdr.markForCheck();
@@ -971,6 +973,7 @@ export class DashboardComponent implements OnInit {
     try {
       if (this.isEditing() && this.editingProductId) {
         await this.supabaseService.actualizarProducto(this.editingProductId, payload);
+        this.alertService.success('Producto actualizado con éxito.');
       } else {
         const fullPayload: Producto = {
           ...payload,
@@ -978,12 +981,13 @@ export class DashboardComponent implements OnInit {
           creado_por: currentUserProfile.id
         } as Producto;
         await this.supabaseService.crearProducto(fullPayload);
+        this.alertService.success('Producto creado y publicado con éxito.');
       }
       this.closeForm();
       this.cargarMisProductos();
     } catch (err) {
       console.error('Error al guardar producto:', err);
-      alert('Error al guardar el producto. Comprueba los campos.');
+      this.alertService.error('Error al guardar el producto. Comprueba los campos.');
     } finally {
       this.saving.set(false);
       this.cdr.markForCheck();
@@ -991,14 +995,23 @@ export class DashboardComponent implements OnInit {
   }
 
   async deleteProduct(id: string) {
-    if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
+    const confirmacion = await this.alertService.confirm({
+      title: '¿Eliminar producto?',
+      message: '¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.',
+      confirmText: 'Sí, eliminar',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
+
+    if (!confirmacion) return;
 
     try {
       await this.supabaseService.eliminarProducto(id);
+      this.alertService.success('Producto eliminado con éxito.');
       this.cargarMisProductos();
     } catch (err) {
       console.error('Error al eliminar producto:', err);
-      alert('No se pudo eliminar el producto.');
+      this.alertService.error('No se pudo eliminar el producto.');
     }
   }
 

@@ -55,3 +55,4 @@ skills-lock.json
 test-results
 testem.log
 .vscode
+.vercel
