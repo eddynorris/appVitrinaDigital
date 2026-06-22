@@ -12,7 +12,6 @@ import {
   LucidePencil, 
   LucideTrash2, 
   LucideFileText, 
-  LucideCamera, 
   LucideSparkles, 
   LucideCopy,
   LucideAlertCircle
@@ -29,7 +28,6 @@ import {
     LucidePencil,
     LucideTrash2,
     LucideFileText,
-    LucideCamera,
     LucideSparkles,
     LucideCopy,
     LucideAlertCircle
@@ -315,79 +313,129 @@ import {
           }
         </main>
 
-        <!-- PANEL LATERAL: ASISTENCIA IA & CONSEJOS DE FOTOGRAFÍA -->
+        <!-- PANEL LATERAL: ASISTENTE IA PARA PRODUCTOS (Tabs) -->
         <aside class="dashboard-sidebar">
-          <!-- Widget Asistente de Fotos con IA -->
-          <div class="sidebar-widget glass-panel success-border">
-            <div class="widget-header">
-              <svg lucideCamera [size]="20" class="widget-icon" style="color: var(--success-color);"></svg>
-              <h4>Asistente de Fotos con IA</h4>
-            </div>
-            <p class="widget-text">
-              Modelos gratuitos de frontera con enlaces directos para optimizar o generar tus fotos escolares:
-            </p>
-            <div class="ai-links">
-              <a href="https://gemini.google.com" target="_blank" class="ai-link-btn" title="Chat de Gemini">
-                <span class="ai-icon">🍌</span> Gemini Chat
-              </a>
-              <a href="https://aistudio.google.com" target="_blank" class="ai-link-btn" title="Google AI Studio (Gratis)">
-                <span class="ai-icon">⚡</span> AI Studio (Flash)
-              </a>
-              <a href="https://chat.qwenlm.ai" target="_blank" class="ai-link-btn" title="Chat de Qwen AI">
-                <span class="ai-icon">🤖</span> Qwen Chat
-              </a>
-              <a href="https://huggingface.co/spaces/Tongyi-MAI/Z-Image-Turbo" target="_blank" class="ai-link-btn" title="Z-Image Turbo (Gratis)">
-                <span class="ai-icon">🎨</span> Z-Image (Turbo)
-              </a>
-              <a href="https://huggingface.co/spaces/black-forest-labs/FLUX.1-schnell" target="_blank" class="ai-link-btn" title="FLUX.1 Schnell">
-                <span class="ai-icon">🔥</span> FLUX.1 Schnell
-              </a>
-            </div>
-            <hr class="widget-divider">
-            <div class="prompt-selector-wrapper">
-              <label class="form-label" style="font-size: 0.75rem;">Estilo de Prompt de Foto:</label>
-              <select class="form-input" style="font-size: 0.8rem; padding: 0.4rem; height: auto;" (change)="onPromptStyleChange($event)">
-                <option value="estudio">Fondo de Estudio Minimalista</option>
-                <option value="organico">Bodegón Orgánico (Postres/Plantas)</option>
-                <option value="catalogo">Catálogo Moderno (Textiles/Bisutería)</option>
-                <option value="flatlay">Vista Cenital (Flat Lay) Creativo</option>
-                <option value="rustico">Estilo Rústico y Tradicional</option>
-                <option value="macro">Macrofotografía (Detalle y Textura)</option>
-                <option value="iluminacion">Bodegón con Luz Dramática</option>
-              </select>
-            </div>
-            <div class="prompt-box">
-              <code>{{ activeImagePrompt() }}</code>
-            </div>
-            <button class="btn btn-glass btn-copy-prompt" (click)="copyImagePrompt()">
-              <svg lucideCopy [size]="14" style="margin-right: 0.35rem; display: inline-block; vertical-align: middle;"></svg>
-              Copiar Prompt Elegido
-            </button>
-            @if (imagePromptCopied()) {
-              <span class="copy-alert">¡Copiado al portapapeles!</span>
-            }
-          </div>
-
-          <!-- Widget de Asistencia en Prompts (Gemini) -->
-          <div class="sidebar-widget glass-panel primary-border">
-            <div class="widget-header">
+          <div class="sidebar-widget glass-panel primary-border" style="padding: 1.25rem;">
+            <div class="widget-header" style="margin-bottom: 1rem;">
               <svg lucideSparkles [size]="20" class="widget-icon" style="color: var(--primary-color);"></svg>
-              <h4>Asistente de Redacción (Gemini)</h4>
+              <h4 style="font-size: 1rem; font-weight: 700; margin: 0;">Asistente IA del Producto</h4>
             </div>
-            <p class="widget-text">
-              ¿No sabes qué escribir en la descripción? Copia este prompt, pégalo en Gemini y adáptalo con los datos de tu producto:
-            </p>
-            <div class="prompt-box">
-              <code>
-                "Escribe una descripción comercial y sumamente atractiva para la tienda escolar sobre un producto llamado [Nombre]. Está hecho a mano de [Material] por estudiantes del colegio [Tu Colegio]. Resalta su utilidad, textura y acabado. Keep it simple, 2 párrafos cortos."
-              </code>
+            
+            <!-- Sub-menú de Pestañas Premium -->
+            <div class="tab-menu" style="display: flex; gap: 0.25rem; background: var(--bg-tertiary); padding: 0.25rem; border-radius: var(--radius-sm); margin-bottom: 1rem; border: 1px solid var(--border-color);">
+              <button 
+                type="button"
+                class="tab-btn" 
+                [class.active]="activeTab() === 'fotos'" 
+                (click)="activeTab.set('fotos')"
+                style="flex: 1; padding: 0.5rem 0.25rem; font-size: 0.72rem; font-weight: 700; border: none; background: transparent; cursor: pointer; border-radius: 4px; color: var(--text-secondary); transition: all var(--transition-fast);"
+              >
+                📸 Fotos
+              </button>
+              <button 
+                type="button"
+                class="tab-btn" 
+                [class.active]="activeTab() === 'redaccion'" 
+                (click)="activeTab.set('redaccion')"
+                style="flex: 1; padding: 0.5rem 0.25rem; font-size: 0.72rem; font-weight: 700; border: none; background: transparent; cursor: pointer; border-radius: 4px; color: var(--text-secondary); transition: all var(--transition-fast);"
+              >
+                ✍️ Redacción
+              </button>
+              <button 
+                type="button"
+                class="tab-btn" 
+                [class.active]="activeTab() === 'comercial'" 
+                (click)="activeTab.set('comercial')"
+                style="flex: 1; padding: 0.5rem 0.25rem; font-size: 0.72rem; font-weight: 700; border: none; background: transparent; cursor: pointer; border-radius: 4px; color: var(--text-secondary); transition: all var(--transition-fast);"
+              >
+                📢 Comercial
+              </button>
             </div>
-            <button class="btn btn-glass btn-copy-prompt" (click)="copyPrompt()">
-              <svg lucideCopy [size]="14" style="margin-right: 0.35rem; display: inline-block; vertical-align: middle;"></svg>
-              Copiar Prompt
-            </button>
+
+            <!-- CONTENIDO DE PESTAÑA: FOTOS -->
+            @if (activeTab() === 'fotos') {
+              <div class="tab-content animate-fade-in" style="display: flex; flex-direction: column; gap: 0.85rem;">
+                <p class="widget-text" style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4; margin: 0;">
+                  Herramientas gratuitas para optimizar o generar fotos de tus productos:
+                </p>
+                <div class="ai-links" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem;">
+                  <a href="https://gemini.google.com" target="_blank" class="ai-link-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.35rem; font-size: 0.72rem; padding: 0.4rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); transition: all var(--transition-fast);">
+                    <span>♊</span> Gemini Chat
+                  </a>
+                  <a href="https://chat.qwenlm.ai" target="_blank" class="ai-link-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.35rem; font-size: 0.72rem; padding: 0.4rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); transition: all var(--transition-fast);">
+                    <span>🤖</span> Qwen Chat
+                  </a>
+                  <a href="https://image.z.ai/" target="_blank" class="ai-link-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.35rem; font-size: 0.72rem; padding: 0.4rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); transition: all var(--transition-fast);">
+                    <span>⚡</span> Z.ai Image
+                  </a>
+                  <a href="https://labs.google/fx/es/tools/flow" target="_blank" class="ai-link-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.35rem; font-size: 0.72rem; padding: 0.4rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); transition: all var(--transition-fast);">
+                    <span>🌊</span> Google Flow
+                  </a>
+                </div>
+                <div class="prompt-selector-wrapper">
+                  <label class="form-label" style="font-size: 0.75rem; margin-bottom: 0.25rem;">Estilo de Foto (ref. imagen cargada):</label>
+                  <select class="form-input" style="font-size: 0.78rem; padding: 0.4rem; height: auto;" (change)="onPromptStyleChange($event)">
+                    <option value="estudio">Fondo de Estudio Minimalista</option>
+                    <option value="organico">Bodegón Orgánico (Postres/Plantas)</option>
+                    <option value="catalogo">Catálogo Comercial de Lujo</option>
+                    <option value="flatlay">Vista Cenital (Flat Lay) Creativo</option>
+                  </select>
+                </div>
+                <div class="prompt-box" style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.65rem; font-size: 0.72rem; font-family: monospace; color: var(--text-primary); word-break: break-word; max-height: 100px; overflow-y: auto;">
+                  {{ activeImagePrompt() }}
+                </div>
+                <button type="button" class="btn btn-glass" style="font-size: 0.75rem; padding: 0.45rem 1rem; width: 100%; display: flex; justify-content: center; align-items: center; gap: 0.35rem;" (click)="copyToClipboard(activeImagePrompt())">
+                  <svg lucideCopy [size]="12"></svg>
+                  Copiar Prompt de Imagen
+                </button>
+              </div>
+            }
+
+            <!-- CONTENIDO DE PESTAÑA: REDACCIÓN -->
+            @if (activeTab() === 'redaccion') {
+              <div class="tab-content animate-fade-in" style="display: flex; flex-direction: column; gap: 0.85rem;">
+                <p class="widget-text" style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4; margin: 0;">
+                  Adjunta la foto de tu producto en Gemini Chat para obtener una descripción optimizada para SEO en un solo párrafo:
+                </p>
+                <div class="prompt-box" style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.65rem; font-size: 0.72rem; font-family: monospace; color: var(--text-primary); word-break: break-word; max-height: 120px; overflow-y: auto;">
+                  {{ activeRedaccionPrompt }}
+                </div>
+                <button type="button" class="btn btn-glass" style="font-size: 0.75rem; padding: 0.45rem 1rem; width: 100%; display: flex; justify-content: center; align-items: center; gap: 0.35rem;" (click)="copyToClipboard(activeRedaccionPrompt)">
+                  <svg lucideCopy [size]="12"></svg>
+                  Copiar Prompt de Redacción
+                </button>
+              </div>
+            }
+
+            <!-- CONTENIDO DE PESTAÑA: COMERCIAL -->
+            @if (activeTab() === 'comercial') {
+              <div class="tab-content animate-fade-in" style="display: flex; flex-direction: column; gap: 0.85rem;">
+                <p class="widget-text" style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4; margin: 0;">
+                  Genera campañas comerciales y de WhatsApp para Google Omni en Flow:
+                </p>
+                <div class="prompt-selector-wrapper">
+                  <label class="form-label" style="font-size: 0.75rem; margin-bottom: 0.25rem;">Tipo de Prompt Comercial:</label>
+                  <select class="form-input" style="font-size: 0.78rem; padding: 0.4rem; height: auto;" (change)="onComercialStyleChange($event)">
+                    <option value="whatsapp">Mensaje persuasivo para WhatsApp</option>
+                    <option value="lanzamiento">Campaña de Lanzamiento Digital</option>
+                    <option value="seo">Ficha Técnica y Palabras Clave SEO</option>
+                    <option value="instagram">Publicación para Instagram/FB</option>
+                  </select>
+                </div>
+                <div class="prompt-box" style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.65rem; font-size: 0.72rem; font-family: monospace; color: var(--text-primary); word-break: break-word; max-height: 100px; overflow-y: auto;">
+                  {{ activeComercialPrompt() }}
+                </div>
+                <button type="button" class="btn btn-glass" style="font-size: 0.75rem; padding: 0.45rem 1rem; width: 100%; display: flex; justify-content: center; align-items: center; gap: 0.35rem;" (click)="copyToClipboard(activeComercialPrompt())">
+                  <svg lucideCopy [size]="12"></svg>
+                  Copiar Prompt Comercial
+                </button>
+              </div>
+            }
+
             @if (promptCopied()) {
-              <span class="copy-alert">¡Copiado al portapapeles!</span>
+              <div class="copy-alert animate-fade-in" style="font-size: 0.72rem; color: var(--success-color); font-weight: 700; text-align: center; margin-top: 0.5rem;">
+                ¡Copiado al portapapeles con éxito!
+              </div>
             }
           </div>
         </aside>
@@ -941,6 +989,21 @@ import {
     [data-theme="dark"] .warning-icon {
       color: #f59e0b;
     }
+
+    /* Estilos del Sub-menú de Pestañas del Asistente IA */
+    .tab-btn:hover {
+      color: var(--primary-color) !important;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .tab-btn.active {
+      background: var(--bg-secondary) !important;
+      color: var(--primary-color) !important;
+      box-shadow: var(--shadow-sm);
+    }
+    [data-theme="dark"] .tab-btn.active {
+      background: var(--bg-primary) !important;
+      color: var(--primary-color) !important;
+    }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -1004,9 +1067,16 @@ export class DashboardComponent implements OnInit {
   readonly isEditing = signal<boolean>(false);
   readonly uploadingImage = signal<boolean>(false);
   readonly saving = signal<boolean>(false);
+
+  // Asistente IA (Pestañas y Prompts)
+  readonly activeTab = signal<'fotos' | 'redaccion' | 'comercial'>('fotos');
   readonly promptCopied = signal<boolean>(false);
-  readonly imagePromptCopied = signal<boolean>(false);
-  readonly activeImagePrompt = signal<string>('Estilo fotografía de estudio de [Nombre del producto], fondo minimalista de color neutro crema suave con iluminación difusa de estudio y sombras sutiles en la base, alta calidad, diseño premium.');
+  
+  readonly activeImagePrompt = signal<string>('Tomando como base la imagen adjunta de mi producto, genera una fotografía de estudio publicitaria de alta calidad. Coloca el producto en primer plano sobre un fondo minimalista y limpio de color neutro crema suave con iluminación difusa de estudio y sombras sutiles en la base.');
+  
+  readonly activeRedaccionPrompt = 'Analiza la imagen adjunta de mi producto. Escribe una descripción comercial, profesional y optimizada para SEO en un único párrafo de máximo 4 líneas. Detalla de forma realista los materiales, acabados y texturas que observas, mencionando que fue hecho a mano por estudiantes del taller técnico del colegio [Tu Colegio]. Mantén un tono sumamente atractivo.';
+
+  readonly activeComercialPrompt = signal<string>('Analiza la imagen de mi producto y redacta un mensaje corto y persuasivo ideal para compartir por WhatsApp. Debe incluir emojis llamativos, resaltar que es un producto hecho a mano por estudiantes del taller de [Tu Colegio], indicar el precio [Precio], y terminar con un llamado a la acción claro para que el cliente lo compre.');
 
   readonly uploadedImages = signal<string[]>([]);
   readonly showImageError = signal<boolean>(false);
@@ -1305,40 +1375,39 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  // Copiar Prompt al portapapeles
-  copyPrompt() {
-    const promptText = `Escribe una descripción comercial y sumamente atractiva para la tienda escolar sobre un producto llamado [Nombre]. Está hecho a mano de [Material] por estudiantes del colegio [Tu Colegio]. Resalta su utilidad, textura y acabado. Keep it simple, 2 párrafos cortos.`;
-    navigator.clipboard.writeText(promptText).then(() => {
+  // Copiar cualquier texto al portapapeles
+  copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text).then(() => {
       this.promptCopied.set(true);
       setTimeout(() => this.promptCopied.set(false), 3000);
     });
   }
 
-  // Copiar Prompt de Imagen al portapapeles
-  copyImagePrompt() {
-    navigator.clipboard.writeText(this.activeImagePrompt()).then(() => {
-      this.imagePromptCopied.set(true);
-      setTimeout(() => this.imagePromptCopied.set(false), 3000);
-    });
-  }
-
-  // Manejar el cambio de estilo de prompt de imagen
+  // Manejar el cambio de estilo de prompt de imagen (con input de imagen)
   onPromptStyleChange(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
     if (value === 'estudio') {
-      this.activeImagePrompt.set('Estilo fotografía de estudio de [Nombre del producto], fondo minimalista de color neutro crema suave con iluminación difusa de estudio y sombras sutiles en la base, alta calidad, diseño premium.');
+      this.activeImagePrompt.set('Tomando como base la imagen adjunta de mi producto, genera una fotografía de estudio publicitaria de alta calidad. Coloca el producto en primer plano sobre un fondo minimalista y limpio de color neutro crema suave con iluminación difusa de estudio y sombras sutiles en la base.');
     } else if (value === 'organico') {
-      this.activeImagePrompt.set('Primer plano artístico (close-up) de [Nombre del producto], iluminación natural de ventana, colocado sobre una mesa de madera rústica limpia, fondo desenfocado sutil (bokeh), colores cálidos y realistas.');
+      this.activeImagePrompt.set('Tomando como base la imagen adjunta de mi producto, genera una fotografía de estilo bodegón orgánico. Coloca el producto sobre una mesa de madera rústica limpia, con luz natural difusa de una ventana lateral, y un fondo desenfocado (bokeh) de plantas o ambiente natural.');
     } else if (value === 'catalogo') {
-      this.activeImagePrompt.set('Fotografía de catálogo comercial de [Nombre del producto], colocado artísticamente sobre una base texturizada moderna de mármol o piedra, luz de estudio lateral que resalta los detalles del producto, sombras sutiles, alta nitidez.');
+      this.activeImagePrompt.set('Tomando como base la imagen adjunta de mi producto, genera una fotografía de catálogo comercial de lujo. Coloca el producto de forma artística sobre una base texturizada moderna de mármol o piedra, con luz lateral nítida que resalte sus texturas y costuras, y sombras elegantes bien definidas.');
     } else if (value === 'flatlay') {
-      this.activeImagePrompt.set('Vista cenital (flat lay) de [Nombre del producto] organizado estéticamente sobre un fondo mate de color pastel suave, rodeado de algunos elementos artesanales minimalistas complementarios, luz natural difusa, composición simétrica.');
-    } else if (value === 'rustico') {
-      this.activeImagePrompt.set('Fotografía rústica y hogareña de [Nombre del producto], colocado sobre una mesa de madera rústica con un paño de lino natural arrugado, iluminación cálida de atardecer filtrada, ambiente acogedor y artesanal.');
-    } else if (value === 'macro') {
-      this.activeImagePrompt.set('Macrofotografía de ultra alta definición (macro close-up) enfocada en los detalles de textura, costura o acabado de [Nombre del producto], profundidad de campo muy corta (bokeh extremo), luz suave que resalta el relieve artesanal.');
-    } else if (value === 'iluminacion') {
-      this.activeImagePrompt.set('Fotografía dramática de bodegón de [Nombre del producto], fondo oscuro texturizado, iluminación direccional tipo claroscuro (chiaroscuro) que resalta la forma tridimensional y silueta del producto, sombras artísticas profundas.');
+      this.activeImagePrompt.set('Tomando como base la imagen adjunta de mi producto, genera una fotografía en plano cenital (flat lay). Organiza el producto estéticamente sobre un fondo mate de color pastel suave, rodeado de algunos elementos artesanales minimalistas que complementen su origen hecho a mano.');
+    }
+  }
+
+  // Manejar el cambio de estilo de prompt comercial
+  onComercialStyleChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+    if (value === 'whatsapp') {
+      this.activeComercialPrompt.set('Analiza la imagen de mi producto y redacta un mensaje corto y persuasivo ideal para compartir por WhatsApp. Debe incluir emojis llamativos, resaltar que es un producto hecho a mano por estudiantes del taller de [Tu Colegio], indicar el precio [Precio], y terminar con un llamado a la acción claro para que el cliente lo compre.');
+    } else if (value === 'lanzamiento') {
+      this.activeComercialPrompt.set('Analiza la imagen de mi producto y diseña una estrategia corta de lanzamiento digital para Google Omni/Flow. Propón un eslogan principal pegajoso, 3 beneficios clave del producto orientados al cliente local, y una idea de publicación promocional llamativa.');
+    } else if (value === 'seo') {
+      this.activeComercialPrompt.set('Analiza la imagen adjunta de mi producto y genera una ficha técnica profesional y optimizada para buscadores (SEO). Incluye una lista de 4 palabras clave de alto tráfico, los materiales de fabricación deducidos de la imagen y los cuidados recomendados del producto, todo redactado de forma eficiente.');
+    } else if (value === 'instagram') {
+      this.activeComercialPrompt.set('Analiza la imagen de mi producto y redacta un post creativo para redes sociales. Usa un gancho inicial que capte la atención, destaca la dedicación de los alumnos de [Tu Colegio] al crear esta pieza única a mano, e incluye hashtags estratégicos como #EmprendimientoEscolar #HechoAMano #LaVictoria.');
     }
   }
 }
