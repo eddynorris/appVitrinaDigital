@@ -411,15 +411,15 @@ import {
             @if (activeTab() === 'comercial') {
               <div class="tab-content animate-fade-in" style="display: flex; flex-direction: column; gap: 0.85rem;">
                 <p class="widget-text" style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4; margin: 0;">
-                  Genera campañas comerciales y de WhatsApp para Google Omni en Flow:
+                  Genera videos comerciales de hasta 10 segundos en Google Flow usando tu imagen de base como ingrediente:
                 </p>
                 <div class="prompt-selector-wrapper">
-                  <label class="form-label" style="font-size: 0.75rem; margin-bottom: 0.25rem;">Tipo de Prompt Comercial:</label>
+                  <label class="form-label" style="font-size: 0.75rem; margin-bottom: 0.25rem;">Efecto Cinematográfico:</label>
                   <select class="form-input" style="font-size: 0.78rem; padding: 0.4rem; height: auto;" (change)="onComercialStyleChange($event)">
-                    <option value="whatsapp">Mensaje persuasivo para WhatsApp</option>
-                    <option value="lanzamiento">Campaña de Lanzamiento Digital</option>
-                    <option value="seo">Ficha Técnica y Palabras Clave SEO</option>
-                    <option value="instagram">Publicación para Instagram/FB</option>
+                    <option value="giro_orbital">Giro Orbital de 360° (Product Spin)</option>
+                    <option value="macro_detalle">Zoom Macro de Detalle (Macro Detail)</option>
+                    <option value="revelacion">Revelación con Luz de Estudio (Reveal)</option>
+                    <option value="dinamico">Movimiento y Efectos Dinámicos (Dynamic Motion)</option>
                   </select>
                 </div>
                 <div class="prompt-box" style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.65rem; font-size: 0.72rem; font-family: monospace; color: var(--text-primary); word-break: break-word; max-height: 100px; overflow-y: auto;">
@@ -427,7 +427,7 @@ import {
                 </div>
                 <button type="button" class="btn btn-glass" style="font-size: 0.75rem; padding: 0.45rem 1rem; width: 100%; display: flex; justify-content: center; align-items: center; gap: 0.35rem;" (click)="copyToClipboard(activeComercialPrompt())">
                   <svg lucideCopy [size]="12"></svg>
-                  Copiar Prompt Comercial
+                  Copiar Prompt de Video
                 </button>
               </div>
             }
@@ -1076,7 +1076,7 @@ export class DashboardComponent implements OnInit {
   
   readonly activeRedaccionPrompt = 'Analiza la imagen adjunta de mi producto. Escribe una descripción comercial, profesional y optimizada para SEO en un único párrafo de máximo 4 líneas. Detalla de forma realista los materiales, acabados y texturas que observas, mencionando que fue hecho a mano por estudiantes del taller técnico del colegio [Tu Colegio]. Mantén un tono sumamente atractivo.';
 
-  readonly activeComercialPrompt = signal<string>('Analiza la imagen de mi producto y redacta un mensaje corto y persuasivo ideal para compartir por WhatsApp. Debe incluir emojis llamativos, resaltar que es un producto hecho a mano por estudiantes del taller de [Tu Colegio], indicar el precio [Precio], y terminar con un llamado a la acción claro para que el cliente lo compre.');
+  readonly activeComercialPrompt = signal<string>('Usando la imagen del producto cargada como ingrediente base, genera un video comercial cinematográfico de 8 segundos. La cámara realiza un paneo orbital (360-degree orbit shot) extremadamente suave y lento alrededor del producto, manteniéndolo perfectamente estable y enfocado en el centro del encuadre. El producto descansa sobre un pedestal minimalista en un estudio elegante. La iluminación es suave y cambia sutilmente para resaltar las texturas y superficies tridimensionales de forma publicitaria premium y fotorrealista.');
 
   readonly uploadedImages = signal<string[]>([]);
   readonly showImageError = signal<boolean>(false);
@@ -1397,17 +1397,17 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  // Manejar el cambio de estilo de prompt comercial
+  // Manejar el cambio de estilo de prompt de video comercial (Google Flow)
   onComercialStyleChange(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
-    if (value === 'whatsapp') {
-      this.activeComercialPrompt.set('Analiza la imagen de mi producto y redacta un mensaje corto y persuasivo ideal para compartir por WhatsApp. Debe incluir emojis llamativos, resaltar que es un producto hecho a mano por estudiantes del taller de [Tu Colegio], indicar el precio [Precio], y terminar con un llamado a la acción claro para que el cliente lo compre.');
-    } else if (value === 'lanzamiento') {
-      this.activeComercialPrompt.set('Analiza la imagen de mi producto y diseña una estrategia corta de lanzamiento digital para Google Omni/Flow. Propón un eslogan principal pegajoso, 3 beneficios clave del producto orientados al cliente local, y una idea de publicación promocional llamativa.');
-    } else if (value === 'seo') {
-      this.activeComercialPrompt.set('Analiza la imagen adjunta de mi producto y genera una ficha técnica profesional y optimizada para buscadores (SEO). Incluye una lista de 4 palabras clave de alto tráfico, los materiales de fabricación deducidos de la imagen y los cuidados recomendados del producto, todo redactado de forma eficiente.');
-    } else if (value === 'instagram') {
-      this.activeComercialPrompt.set('Analiza la imagen de mi producto y redacta un post creativo para redes sociales. Usa un gancho inicial que capte la atención, destaca la dedicación de los alumnos de [Tu Colegio] al crear esta pieza única a mano, e incluye hashtags estratégicos como #EmprendimientoEscolar #HechoAMano #LaVictoria.');
+    if (value === 'giro_orbital') {
+      this.activeComercialPrompt.set('Usando la imagen del producto cargada como ingrediente base, genera un video comercial cinematográfico de 8 segundos. La cámara realiza un paneo orbital (360-degree orbit shot) extremadamente suave y lento alrededor del producto, manteniéndolo perfectamente estable y enfocado en el centro del encuadre. El producto descansa sobre un pedestal minimalista en un estudio elegante. La iluminación es suave y cambia sutilmente para resaltar las texturas y superficies tridimensionales de forma publicitaria premium y fotorrealista.');
+    } else if (value === 'macro_detalle') {
+      this.activeComercialPrompt.set('Usando la imagen del producto cargada como ingrediente base, genera un video comercial de 8 segundos enfocado en los detalles de fabricación. La cámara realiza un acercamiento macro ultra suave y lento (macro dolly-in), capturando en primer plano las texturas reales, costuras precisas y acabados artesanales del producto. Iluminación lateral difusa de estudio que resalta el relieve y sombras suaves en el fondo con un desenfoque bokeh cinematográfico profundo.');
+    } else if (value === 'revelacion') {
+      this.activeComercialPrompt.set('Usando la imagen del producto cargada como ingrediente base, genera un video comercial de 8 segundos de revelación sofisticada. El video se inicia en una penumbra elegante y de forma gradual se enciende una luz cenital suave y direccional (studio spotlight) que revela el producto con alta nitidez. La cámara desciende lentamente en una toma vertical estabilizada (crane down), mostrando el producto posado sobre una base premium de piedra pulida o madera fina.');
+    } else if (value === 'dinamico') {
+      this.activeComercialPrompt.set('Usando la imagen del producto cargada como ingrediente base, genera un video comercial dinámico y vivo de 8 segundos. La cámara realiza un ligero movimiento de balanceo lateral en cámara lenta. En el ambiente flotan de forma natural partículas de luz doradas y polvo brillante en suspensión que interactúan con la iluminación. Se percibe una brisa muy suave que genera un movimiento realista y sutil en los elementos textiles del set, con reflejos ópticos de alta fidelidad.');
     }
   }
 }
