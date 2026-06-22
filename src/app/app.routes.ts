@@ -41,6 +41,16 @@ export const routes: Routes = [
     title: 'Mi Perfil - Vitrina Digital La Victoria'
   },
   {
+    path: 'terminos-y-condiciones',
+    loadComponent: () => import('./pages/legal/terminos/terminos.component').then(m => m.TerminosComponent),
+    title: 'Términos y Condiciones - Vitrina Digital La Victoria'
+  },
+  {
+    path: 'politica-de-privacidad',
+    loadComponent: () => import('./pages/legal/privacidad/privacidad.component').then(m => m.PrivacidadComponent),
+    title: 'Política de Privacidad - Vitrina Digital La Victoria'
+  },
+  {
     path: '**',
     redirectTo: ''
   }

@@ -166,6 +166,21 @@ import {
             }
           </div>
 
+          <!-- Casilla de consentimiento legal y parental (LPDP Perú) -->
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="aceptar_terminos" class="form-checkbox" />
+              <span class="checkbox-text">
+                Declaro bajo juramento que soy mayor de 14 años o cuento con la autorización expresa de mis padres o tutores legales para publicar mis proyectos escolares en esta vitrina digital, aceptando los 
+                <a routerLink="/terminos-y-condiciones" target="_blank" class="legal-link-inline">Términos y Condiciones</a> y la 
+                <a routerLink="/politica-de-privacidad" target="_blank" class="legal-link-inline">Política de Privacidad</a> de la I.E. "La Victoria" de Abancay.
+              </span>
+            </label>
+            @if (isFieldInvalid('aceptar_terminos')) {
+              <span class="error-text">Debes aceptar los términos y condiciones para continuar</span>
+            }
+          </div>
+
           <div class="form-actions">
             <button 
               type="submit" 
@@ -487,6 +502,44 @@ import {
       100% { transform: rotate(360deg); }
     }
 
+    .checkbox-group {
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      background: rgba(192, 142, 77, 0.05);
+      border: 1px dashed var(--accent-color);
+      border-radius: var(--radius-sm);
+      transition: background-color var(--transition-fast);
+    }
+    [data-theme="dark"] .checkbox-group {
+      background: rgba(192, 142, 77, 0.02);
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      cursor: pointer;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .form-checkbox {
+      margin-top: 0.15rem;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary-color);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .legal-link-inline {
+      color: var(--primary-color);
+      text-decoration: underline;
+      font-weight: 600;
+      transition: color var(--transition-fast);
+    }
+    .legal-link-inline:hover {
+      color: var(--primary-dark);
+    }
+
     @media (max-width: 768px) {
       .form-row {
         flex-direction: column;
@@ -666,7 +719,8 @@ export class PerfilComponent implements OnInit {
       whatsapp_contacto: [''],
       docente_tutor_id: [''],
       institucion_id: [''],
-      rol: ['alumno']
+      rol: ['alumno'],
+      aceptar_terminos: [false, [Validators.requiredTrue]]
     });
 
     this.passwordForm = this.fb.group({
