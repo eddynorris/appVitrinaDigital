@@ -426,6 +426,10 @@ import {
       gap: 1.5rem;
       align-items: start;
     }
+    .dashboard-main {
+      min-width: 0;
+      width: 100%;
+    }
 
     /* Formulario */
     .form-container {
@@ -832,6 +836,13 @@ import {
         width: 100%;
         text-align: center;
         justify-content: center;
+      }
+      .table-container {
+        padding: 0.75rem;
+      }
+      .products-table th, .products-table td {
+        padding: 0.6rem 0.5rem;
+        font-size: 0.8rem;
       }
     }
 
