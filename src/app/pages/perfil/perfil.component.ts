@@ -3,15 +3,15 @@ import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService, Perfil } from '../../core/services/auth.service';
 import { SupabaseService } from '../../core/services/supabase.service';
+import { AlertService } from '../../core/services/alert.service';
 import { 
   LucideUser, 
   LucideSchool, 
   LucideShield, 
-  LucideCheckCircle, 
-  LucideAlertCircle, 
   LucideArrowLeft,
   LucideSave,
-  LucideKey
+  LucideKey,
+  LucideTrash2
 } from '@lucide/angular';
 
 @Component({
@@ -22,11 +22,10 @@ import {
     LucideUser,
     LucideSchool,
     LucideShield,
-    LucideCheckCircle,
-    LucideAlertCircle,
     LucideArrowLeft,
     LucideSave,
-    LucideKey
+    LucideKey,
+    LucideTrash2
   ],
   template: `
     <div class="profile-page container">
@@ -52,20 +51,6 @@ import {
             </div>
           </div>
         </div>
-
-        @if (errorMessage()) {
-          <div class="error-alert">
-            <svg lucideAlertCircle></svg>
-            <span>{{ errorMessage() }}</span>
-          </div>
-        }
-
-        @if (successMessage()) {
-          <div class="success-alert">
-            <svg lucideCheckCircle></svg>
-            <span>{{ successMessage() }}</span>
-          </div>
-        }
 
         <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
           <div class="form-section">
@@ -211,20 +196,6 @@ import {
           </div>
         </div>
 
-        @if (passwordErrorMessage()) {
-          <div class="error-alert">
-            <svg lucideAlertCircle></svg>
-            <span>{{ passwordErrorMessage() }}</span>
-          </div>
-        }
-
-        @if (passwordSuccessMessage()) {
-          <div class="success-alert">
-            <svg lucideCheckCircle></svg>
-            <span>{{ passwordSuccessMessage() }}</span>
-          </div>
-        }
-
         <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()" class="profile-form">
           <div class="form-section">
             <div class="form-row">
@@ -276,6 +247,36 @@ import {
             </button>
           </div>
         </form>
+      </div>
+
+      <!-- Zona de Peligro (Eliminar Cuenta) -->
+      <div class="profile-container glass-panel danger-border" style="margin-top: 2rem; border-left: 4px solid #ef4444;">
+        <div class="profile-header" style="border-bottom: 1px solid rgba(239, 68, 68, 0.15); padding-bottom: 1.25rem;">
+          <div class="avatar-wrapper" style="background: rgba(239, 68, 68, 0.1); border-color: #ef4444; color: #ef4444; width: 56px; height: 56px;">
+            <svg lucideTrash2 class="avatar-icon" style="width: 26px; height: 26px;"></svg>
+          </div>
+          <div class="header-info">
+            <h2 style="color: #ef4444; font-size: 1.35rem; font-weight: 700;">Eliminar Cuenta</h2>
+            <p class="helper-text" style="color: var(--text-muted);">Esta acción es permanente e irreversible.</p>
+          </div>
+        </div>
+
+        <div class="form-section" style="margin-top: 1.5rem; gap: 0.75rem;">
+          <p class="helper-text" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+            Si decides eliminar tu cuenta, se borrará de forma inmediata toda tu información personal, productos publicados y el perfil asociado en la Vitrina Digital. No podrás volver a ingresar con estas credenciales.
+          </p>
+        </div>
+
+        <div class="form-actions" style="border-top: 1px solid var(--border-light); padding-top: 1.25rem; margin-top: 1.5rem; display: flex; justify-content: flex-end;">
+          <button 
+            type="button" 
+            class="btn" 
+            style="padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; background: #ef4444; color: white;"
+            (click)="onDeleteAccount()"
+          >
+            Eliminar mi cuenta definitivamente
+          </button>
+        </div>
       </div>
     </div>
   `,
@@ -495,6 +496,22 @@ import {
         padding: 1.5rem;
       }
     }
+    @media (max-width: 480px) {
+      .profile-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1rem;
+      }
+      .form-actions {
+        width: 100%;
+      }
+      .form-actions .btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+      }
+    }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -502,19 +519,16 @@ export class PerfilComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private supabaseService = inject(SupabaseService);
+  private alertService = inject(AlertService);
   private router = inject(Router);
 
   readonly user = this.authService.currentUser;
   readonly saving = signal<boolean>(false);
-  readonly errorMessage = signal<string | null>(null);
-  readonly successMessage = signal<string | null>(null);
   readonly tutors = signal<Perfil[]>([]);
   readonly schools = signal<any[]>([]);
 
   // Password change states
   readonly updatingPassword = signal<boolean>(false);
-  readonly passwordErrorMessage = signal<string | null>(null);
-  readonly passwordSuccessMessage = signal<string | null>(null);
 
   profileForm!: FormGroup;
   passwordForm!: FormGroup;
@@ -681,9 +695,6 @@ export class PerfilComponent implements OnInit {
     if (this.profileForm.invalid) return;
 
     this.saving.set(true);
-    this.errorMessage.set(null);
-    this.successMessage.set(null);
-
     const val = this.profileForm.value;
     const currentUser = this.user();
 
@@ -706,7 +717,7 @@ export class PerfilComponent implements OnInit {
       }
 
       if (whatsappExistente) {
-        this.errorMessage.set('El número de WhatsApp ya está registrado con otra cuenta.');
+        this.alertService.error('El número de WhatsApp ya está registrado con otra cuenta.');
         this.saving.set(false);
         return;
       }
@@ -730,14 +741,10 @@ export class PerfilComponent implements OnInit {
 
     try {
       await this.authService.actualizarPerfil(updates);
-      this.successMessage.set('¡Perfil actualizado con éxito!');
-      // Desvanecer mensaje después de 4 segundos
-      setTimeout(() => this.successMessage.set(null), 4000);
+      this.alertService.success('¡Perfil actualizado con éxito!');
     } catch (err: any) {
       console.error(err);
-      this.errorMessage.set(
-        err.message || 'No se pudo guardar el perfil. Inténtalo de nuevo.'
-      );
+      this.alertService.error(err.message || 'No se pudo guardar el perfil. Inténtalo de nuevo.');
     } finally {
       this.saving.set(false);
     }
@@ -747,23 +754,58 @@ export class PerfilComponent implements OnInit {
     if (this.passwordForm.invalid) return;
 
     this.updatingPassword.set(true);
-    this.passwordErrorMessage.set(null);
-    this.passwordSuccessMessage.set(null);
-
     const { nueva_contrasena } = this.passwordForm.value;
 
     try {
       await this.authService.cambiarContrasena(nueva_contrasena);
-      this.passwordSuccessMessage.set('¡Contraseña actualizada con éxito!');
+      this.alertService.success('¡Contraseña actualizada con éxito!');
       this.passwordForm.reset();
-      setTimeout(() => this.passwordSuccessMessage.set(null), 4000);
     } catch (err: any) {
       console.error(err);
-      this.passwordErrorMessage.set(
-        err.message || 'No se pudo actualizar la contraseña. Inténtalo de nuevo.'
-      );
+      this.alertService.error(err.message || 'No se pudo actualizar la contraseña. Inténtalo de nuevo.');
     } finally {
       this.updatingPassword.set(false);
+    }
+  }
+
+  async onDeleteAccount() {
+    const confirmacion = await this.alertService.confirm({
+      title: '¿Eliminar tu cuenta?',
+      message: 'Esta acción borrará definitivamente tu acceso, perfil y todos tus productos publicados en la Vitrina Digital. Es irreversible.',
+      confirmText: 'Sí, eliminar cuenta',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
+
+    if (!confirmacion) return;
+
+    const segundaConfirmacion = await this.alertService.confirm({
+      title: 'Confirmación de Seguridad',
+      message: '¿Estás absolutamente seguro de que deseas eliminar tu cuenta permanentemente? No podrás deshacer esta acción.',
+      confirmText: 'Eliminar permanentemente',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
+
+    if (!segundaConfirmacion) return;
+
+    try {
+      await this.authService.eliminarCuentaPropia();
+      this.alertService.success('Tu cuenta ha sido eliminada correctamente.');
+      this.router.navigate(['/auth']);
+    } catch (err: any) {
+      console.error('Error al eliminar cuenta:', err);
+      if (err.code === 'PGRST202') {
+        await this.alertService.confirm({
+          title: 'Función SQL Requerida',
+          message: 'Falta registrar la función "eliminar_propia_cuenta" en tu panel de Supabase.\n\nPara solucionarlo, copia y ejecuta el siguiente bloque en el SQL Editor de Supabase:\n\nCREATE OR REPLACE FUNCTION public.eliminar_propia_cuenta()\nRETURNS void AS $$\nBEGIN\n  DELETE FROM auth.users WHERE id = auth.uid();\nEND;\n$$ LANGUAGE plpgsql SECURITY DEFINER;\n\nGRANT EXECUTE ON FUNCTION public.eliminar_propia_cuenta() TO authenticated;',
+          confirmText: 'Entendido',
+          cancelText: 'Cerrar',
+          type: 'warning'
+        });
+      } else {
+        this.alertService.error('Ocurrió un error al intentar eliminar la cuenta. Por favor, inténtalo de nuevo.');
+      }
     }
   }
 }

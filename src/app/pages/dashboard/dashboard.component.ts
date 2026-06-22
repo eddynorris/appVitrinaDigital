@@ -89,24 +89,33 @@ import {
                 <div class="form-row">
                   <div class="form-group flex-2">
                     <label class="form-label" for="nombre">Nombre del Producto</label>
-                    <input id="nombre" type="text" class="form-input" formControlName="nombre" placeholder="Ej. Jarra de Cerámica Pintada" />
+                    <input id="nombre" type="text" class="form-input" [class.input-invalid]="isFieldInvalid('nombre')" formControlName="nombre" placeholder="Ej. Jarra de Cerámica Pintada" />
+                    @if (isFieldInvalid('nombre')) {
+                      <span class="error-text">El nombre es obligatorio.</span>
+                    }
                   </div>
                   
                   <div class="form-group flex-1">
                     <label class="form-label" for="precio">Precio (S/.)</label>
-                    <input id="precio" type="number" step="0.10" class="form-input" formControlName="precio" placeholder="0.00" />
+                    <input id="precio" type="number" step="0.10" class="form-input" [class.input-invalid]="isFieldInvalid('precio')" formControlName="precio" placeholder="0.00" />
+                    @if (isFieldInvalid('precio')) {
+                      <span class="error-text">El precio es obligatorio y debe ser mayor o igual a 0.</span>
+                    }
                   </div>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group flex-1">
                     <label class="form-label" for="categoria">Categoría</label>
-                    <select id="categoria" class="form-input" formControlName="categoria_id">
+                    <select id="categoria" class="form-input" [class.input-invalid]="isFieldInvalid('categoria_id')" formControlName="categoria_id">
                       <option value="">Selecciona una categoría</option>
                       @for (cat of categories(); track cat.id) {
                         <option [value]="cat.id">{{ cat.nombre }}</option>
                       }
                     </select>
+                    @if (isFieldInvalid('categoria_id')) {
+                      <span class="error-text">La categoría es obligatoria.</span>
+                    }
                   </div>
 
                   <div class="form-group flex-1">
@@ -122,7 +131,10 @@ import {
 
                 <div class="form-group">
                   <label class="form-label" for="descripcion">Descripción</label>
-                  <textarea id="descripcion" rows="4" class="form-input" formControlName="descripcion" placeholder="Describe los materiales, dimensiones y el taller donde se fabricó el producto..."></textarea>
+                  <textarea id="descripcion" rows="4" class="form-input" [class.input-invalid]="isFieldInvalid('descripcion')" formControlName="descripcion" placeholder="Describe los materiales, dimensiones y el taller donde se fabricó el producto..."></textarea>
+                  @if (isFieldInvalid('descripcion')) {
+                    <span class="error-text">La descripción es obligatoria.</span>
+                  }
                 </div>
 
                 <!-- Subida de imágenes/videos con Compresión del Cliente -->
@@ -130,6 +142,7 @@ import {
                   <label class="form-label">Fotos o Videos del Producto</label>
                   <div 
                     class="drag-drop-area"
+                    [class.input-invalid]="showImageError()"
                     (dragover)="onDragOver($event)"
                     (drop)="onDrop($event)"
                     (click)="fileInput.click()"
@@ -146,6 +159,10 @@ import {
                     <p class="upload-title">Arrastra tus fotos o videos aquí o haz clic para buscar</p>
                     <p class="upload-subtitle">Las imágenes se optimizan automáticamente. Los videos deben pesar menos de 15MB (MP4/WebM).</p>
                   </div>
+
+                  @if (showImageError()) {
+                    <span class="error-text" style="margin-top: 0.5rem; display: block; text-align: center;">Debes subir al menos una foto o video del producto.</span>
+                  }
 
                   @if (uploadingImage()) {
                     <div class="upload-progress">
@@ -177,7 +194,7 @@ import {
                   <button type="button" class="btn btn-secondary" (click)="closeForm()" [disabled]="saving()">
                     Cancelar
                   </button>
-                  <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid || uploadedImages().length === 0 || saving()">
+                  <button type="submit" class="btn btn-primary" [disabled]="saving()">
                     @if (saving()) {
                       Guardando...
                     } @else {
@@ -252,6 +269,47 @@ import {
                     </tbody>
                   </table>
                 </div>
+
+                <!-- Controles de Paginación -->
+                @if (totalCount() > pageSize()) {
+                  <div class="pagination-container glass-panel animate-fade-in">
+                    <span class="pagination-info">
+                      Mostrando {{ minRange }} a {{ maxRange }} de {{ totalCount() }} productos
+                    </span>
+                    <div class="pagination-buttons">
+                      <button 
+                        type="button"
+                        class="btn-pagination" 
+                        [disabled]="currentPage() === 1"
+                        (click)="changePage(currentPage() - 1)"
+                        aria-label="Página anterior"
+                      >
+                        &laquo; Anterior
+                      </button>
+                      
+                      @for (p of getPagesArray(); track p) {
+                        <button 
+                          type="button"
+                          class="btn-pagination-num" 
+                          [class.active]="p === currentPage()"
+                          (click)="changePage(p)"
+                        >
+                          {{ p }}
+                        </button>
+                      }
+                      
+                      <button 
+                        type="button"
+                        class="btn-pagination" 
+                        [disabled]="currentPage() === totalPages"
+                        (click)="changePage(currentPage() + 1)"
+                        aria-label="Página siguiente"
+                      >
+                        Siguiente &raquo;
+                      </button>
+                    </div>
+                  </div>
+                }
               }
             </div>
           }
@@ -383,6 +441,17 @@ import {
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
+    }
+    .input-invalid {
+      border-color: #ef4444 !important;
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15) !important;
+    }
+    .error-text {
+      display: block;
+      font-size: 0.75rem;
+      color: #ef4444;
+      margin-top: 0.25rem;
+      font-weight: 500;
     }
     .form-row {
       display: flex;
@@ -747,6 +816,119 @@ import {
         width: 100%;
         text-align: center;
       }
+      .form-row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .form-container {
+        padding: 1.25rem;
+      }
+      .form-actions {
+        flex-direction: column-reverse;
+        gap: 0.75rem;
+        width: 100%;
+      }
+      .form-actions .btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+      }
+    }
+
+    /* Paginación Profesional */
+    .pagination-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-top: 1px solid var(--border-light);
+      position: relative;
+      z-index: 10;
+    }
+    .pagination-info {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .pagination-buttons {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .btn-pagination {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-pagination:hover:not(:disabled) {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary-color);
+    }
+    .btn-pagination:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-pagination-num {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast);
+    }
+    .btn-pagination-num:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border-color: var(--border-color);
+    }
+    .btn-pagination-num.active {
+      background: var(--primary-color);
+      color: #ffffff;
+      border-color: var(--primary-color);
+      box-shadow: 0 4px 12px rgba(192, 142, 77, 0.25);
+    }
+    [data-theme="dark"] .btn-pagination-num.active {
+      color: #1c120c;
+    }
+    @media (max-width: 576px) {
+      .pagination-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+    }
+
+    /* Warning Banner Dark Mode */
+    [data-theme="dark"] .warning-banner {
+      background: rgba(217, 119, 6, 0.1);
+      border-color: rgba(217, 119, 6, 0.2);
+      border-left-color: #f59e0b;
+    }
+    [data-theme="dark"] .warning-content h4 {
+      color: #f59e0b;
+    }
+    [data-theme="dark"] .warning-icon {
+      color: #f59e0b;
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -763,6 +945,50 @@ export class DashboardComponent implements OnInit {
   readonly myProducts = signal<Producto[]>([]);
   readonly loadingProducts = signal<boolean>(true);
   readonly categories = signal<Categoria[]>([]);
+
+  // Paginación
+  readonly currentPage = signal<number>(1);
+  readonly pageSize = signal<number>(5);
+  readonly totalCount = signal<number>(0);
+
+  get totalPages(): number {
+    return Math.ceil(this.totalCount() / this.pageSize());
+  }
+
+  get minRange(): number {
+    return (this.currentPage() - 1) * this.pageSize() + 1;
+  }
+
+  get maxRange(): number {
+    return Math.min(this.currentPage() * this.pageSize(), this.totalCount());
+  }
+
+  getPagesArray(): number[] {
+    const total = this.totalPages;
+    const current = this.currentPage();
+    if (total <= 5) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, current + 2);
+    if (current <= 3) {
+      end = 5;
+    } else if (current >= total - 2) {
+      start = total - 4;
+    }
+    const pages = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage.set(page);
+      this.cargarMisProductos();
+    }
+  }
   readonly isFormOpen = signal<boolean>(false);
   readonly isEditing = signal<boolean>(false);
   readonly uploadingImage = signal<boolean>(false);
@@ -772,12 +998,18 @@ export class DashboardComponent implements OnInit {
   readonly activeImagePrompt = signal<string>('Estilo fotografía de estudio de [Nombre del producto], fondo minimalista de color neutro crema suave con iluminación difusa de estudio y sombras sutiles en la base, alta calidad, diseño premium.');
 
   readonly uploadedImages = signal<string[]>([]);
+  readonly showImageError = signal<boolean>(false);
   
   productForm!: FormGroup;
   editingProductId: string | null = null;
 
   constructor(private fb: FormBuilder) {
     this.initForm();
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.productForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
   async ngOnInit() {
@@ -822,28 +1054,56 @@ export class DashboardComponent implements OnInit {
     if (!currentUserProfile) return;
 
     try {
-      // Si es docente o admin, ver todos los de su colegio. Si es alumno, ver los suyos creados.
-      let filters: any = {};
-      if (currentUserProfile.rol === 'alumno') {
-        // Alumnos ven solo lo creado por ellos o lo de su colegio, para mantenerlo simple filtramos los que creó
-        filters.creado_por = currentUserProfile.id;
-      } else {
-        // Docentes ven los de su colegio
-        filters.institucionId = currentUserProfile.institucion_id;
-      }
-      
-      const { data, error } = await this.supabaseService.client
+      let from = (this.currentPage() - 1) * this.pageSize();
+      let to = from + this.pageSize() - 1;
+
+      let query = this.supabaseService.client
         .from('productos')
         .select(`
           *,
           categorias (nombre),
           instituciones (nombre)
-        `)
-        // Si es alumno, ver solo sus creados.
-        .filter(currentUserProfile.rol === 'alumno' ? 'creado_por' : 'institucion_id', 'eq', currentUserProfile.rol === 'alumno' ? currentUserProfile.id : currentUserProfile.institucion_id);
-      
+        `, { count: 'exact' })
+        .filter(
+          currentUserProfile.rol === 'alumno' ? 'creado_por' : 'institucion_id', 
+          'eq', 
+          currentUserProfile.rol === 'alumno' ? currentUserProfile.id : currentUserProfile.institucion_id
+        )
+        .order('created_at', { ascending: false });
+
+      let { data, count, error } = await query.range(from, to);
       if (error) throw error;
+
+      const total = count || 0;
+      // Lógica de recuperación si la página actual quedó vacía después de una eliminación
+      if (this.currentPage() > 1 && (!data || data.length === 0) && total > 0) {
+        const newPage = Math.ceil(total / this.pageSize());
+        this.currentPage.set(newPage);
+        from = (newPage - 1) * this.pageSize();
+        to = from + this.pageSize() - 1;
+        
+        const retryQuery = this.supabaseService.client
+          .from('productos')
+          .select(`
+            *,
+            categorias (nombre),
+            instituciones (nombre)
+          `, { count: 'exact' })
+          .filter(
+            currentUserProfile.rol === 'alumno' ? 'creado_por' : 'institucion_id', 
+            'eq', 
+            currentUserProfile.rol === 'alumno' ? currentUserProfile.id : currentUserProfile.institucion_id
+          )
+          .order('created_at', { ascending: false })
+          .range(from, to);
+
+        const retryRes = await retryQuery;
+        if (retryRes.error) throw retryRes.error;
+        data = retryRes.data;
+      }
+
       this.myProducts.set((data as unknown as Producto[]) || []);
+      this.totalCount.set(total);
     } catch (err) {
       console.error('Error al cargar mis productos:', err);
     } finally {
@@ -856,6 +1116,7 @@ export class DashboardComponent implements OnInit {
     this.isEditing.set(false);
     this.editingProductId = null;
     this.uploadedImages.set([]);
+    this.showImageError.set(false);
     this.initForm();
     this.isFormOpen.set(true);
   }
@@ -864,6 +1125,7 @@ export class DashboardComponent implements OnInit {
     this.isEditing.set(true);
     this.editingProductId = producto.id || null;
     this.uploadedImages.set(producto.imagenes);
+    this.showImageError.set(false);
     
     this.productForm.patchValue({
       nombre: producto.nombre,
@@ -881,6 +1143,7 @@ export class DashboardComponent implements OnInit {
     this.isEditing.set(false);
     this.editingProductId = null;
     this.uploadedImages.set([]);
+    this.showImageError.set(false);
   }
 
   // --- SUBIDA DE IMÁGENES Y VIDEOS ---
@@ -909,6 +1172,7 @@ export class DashboardComponent implements OnInit {
         
         // 3. AGREGAR A LA LISTA
         this.uploadedImages.update(imgs => [...imgs, publicUrl]);
+        this.showImageError.set(false);
       }
     } catch (err) {
       console.error('Error al subir archivo:', err);
@@ -938,12 +1202,26 @@ export class DashboardComponent implements OnInit {
   }
 
   removeImage(index: number) {
-    this.uploadedImages.update(imgs => imgs.filter((_, idx) => idx !== index));
+    this.uploadedImages.update(imgs => {
+      const nextImgs = imgs.filter((_, idx) => idx !== index);
+      if (nextImgs.length === 0) {
+        this.showImageError.set(true);
+      }
+      return nextImgs;
+    });
   }
 
   // --- GUARDAR PRODUCTO ---
   async saveProduct() {
     if (this.productForm.invalid || this.uploadedImages().length === 0) {
+      this.productForm.markAllAsTouched();
+      if (this.uploadedImages().length === 0) {
+        this.showImageError.set(true);
+        this.alertService.warning('Por favor, sube al menos una foto o video para el producto.');
+      } else {
+        this.alertService.warning('Por favor, completa todos los campos obligatorios del formulario.');
+      }
+      this.cdr.markForCheck();
       return;
     }
 
@@ -982,6 +1260,7 @@ export class DashboardComponent implements OnInit {
         } as Producto;
         await this.supabaseService.crearProducto(fullPayload);
         this.alertService.success('Producto creado y publicado con éxito.');
+        this.currentPage.set(1);
       }
       this.closeForm();
       this.cargarMisProductos();

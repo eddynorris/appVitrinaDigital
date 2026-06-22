@@ -42,6 +42,17 @@ export interface Producto {
     whatsapp_contacto: string;
     rol?: string;
   };
+  creador?: {
+    id?: string;
+    nombre_completo: string;
+    rol: string;
+    tutor?: {
+      id?: string;
+      nombre_completo: string;
+      whatsapp_contacto: string;
+      rol: string;
+    } | null;
+  } | null;
 }
 
 @Injectable({
@@ -151,7 +162,9 @@ export class SupabaseService {
     institucionId?: string;
     searchQuery?: string;
     estado?: string;
-  }): Promise<Producto[]> {
+    page?: number;
+    pageSize?: number;
+  }): Promise<{ products: Producto[]; totalCount: number }> {
     return this.conTimeout(
       (async () => {
         let query = this.supabase
@@ -160,8 +173,19 @@ export class SupabaseService {
             *,
             categorias (id, nombre, slug, icono),
             instituciones (id, nombre, distrito, logo_url),
-            perfiles:docente_contacto_id (nombre_completo, whatsapp_contacto, rol)
-          `);
+            perfiles:docente_contacto_id (nombre_completo, whatsapp_contacto, rol),
+            creador:creado_por (
+              id,
+              nombre_completo,
+              rol,
+              tutor:docente_tutor_id (
+                id,
+                nombre_completo,
+                whatsapp_contacto,
+                rol
+              )
+            )
+          `, { count: 'exact' });
 
         if (filters?.estado) {
           query = query.eq('estado', filters.estado);
@@ -181,9 +205,20 @@ export class SupabaseService {
           query = query.ilike('nombre', `%${filters.searchQuery}%`);
         }
 
-        const { data, error } = await query.order('created_at', { ascending: false });
+        query = query.order('created_at', { ascending: false });
+
+        if (filters?.page && filters?.pageSize) {
+          const from = (filters.page - 1) * filters.pageSize;
+          const to = from + filters.pageSize - 1;
+          query = query.range(from, to);
+        }
+
+        const { data, count, error } = await query;
         if (error) throw error;
-        return (data as unknown as Producto[]) || [];
+        return {
+          products: (data as unknown as Producto[]) || [],
+          totalCount: count || 0
+        };
       })()
     );
   }
@@ -197,7 +232,18 @@ export class SupabaseService {
             *,
             categorias (id, nombre, slug, icono),
             instituciones (id, nombre, distrito, logo_url),
-            perfiles:docente_contacto_id (nombre_completo, whatsapp_contacto, rol)
+            perfiles:docente_contacto_id (nombre_completo, whatsapp_contacto, rol),
+            creador:creado_por (
+              id,
+              nombre_completo,
+              rol,
+              tutor:docente_tutor_id (
+                id,
+                nombre_completo,
+                whatsapp_contacto,
+                rol
+              )
+            )
           `)
           .eq('id', id)
           .single();

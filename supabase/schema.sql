@@ -143,7 +143,12 @@ CREATE POLICY "Permitir lectura pública de productos publicados"
 
 CREATE POLICY "Permitir lectura completa de productos a usuarios autenticados" 
   ON public.productos FOR SELECT TO authenticated 
-  USING (true);
+  USING (
+    auth.uid() = creado_por OR 
+    auth.uid() = docente_contacto_id OR 
+    auth.uid() = (SELECT docente_tutor_id FROM public.perfiles WHERE id = creado_por) OR
+    EXISTS (SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND rol = 'admin')
+  );
 
 CREATE POLICY "Permitir insertar productos a usuarios autenticados" 
   ON public.productos FOR INSERT TO authenticated 
@@ -154,6 +159,7 @@ CREATE POLICY "Permitir actualizar productos a sus creadores, tutores o admins"
   USING (
     auth.uid() = creado_por OR 
     auth.uid() = docente_contacto_id OR 
+    auth.uid() = (SELECT docente_tutor_id FROM public.perfiles WHERE id = creado_por) OR
     EXISTS (SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND rol = 'admin')
   );
 
@@ -162,6 +168,7 @@ CREATE POLICY "Permitir eliminar productos a sus creadores, tutores o admins"
   USING (
     auth.uid() = creado_por OR 
     auth.uid() = docente_contacto_id OR 
+    auth.uid() = (SELECT docente_tutor_id FROM public.perfiles WHERE id = creado_por) OR
     EXISTS (SELECT 1 FROM public.perfiles WHERE id = auth.uid() AND rol = 'admin')
   );
 
@@ -207,3 +214,16 @@ INSERT INTO public.categorias (id, nombre, slug, icono) VALUES
 ('c0e0c0e0-c0e0-c0e0-c0e0-c0e0c0e0c005', 'Horticultura y Plantas', 'horticultura-y-plantas', 'flower-pot'),
 ('c0e0c0e0-c0e0-c0e0-c0e0-c0e0c0e0c006', 'Tecnología y Otros', 'tecnologia-y-otros', 'cpu')
 ON CONFLICT (id) DO NOTHING;
+
+-- ---------------------------------------------------------------------
+-- 7. FUNCIÓN PARA ELIMINAR LA PROPIA CUENTA (SECURITY DEFINER)
+-- ---------------------------------------------------------------------
+-- Esta función permite a un usuario autenticado eliminar su propia cuenta
+-- de forma segura, cascando la eliminación a su perfil y productos asociados.
+CREATE OR REPLACE FUNCTION public.eliminar_propia_cuenta()
+RETURNS void AS $$
+BEGIN
+  DELETE FROM auth.users WHERE id = auth.uid();
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+

@@ -204,6 +204,13 @@ export class AuthService {
     if (error) throw error;
   }
 
+  // Eliminar cuenta propia llamando al RPC
+  async eliminarCuentaPropia(): Promise<void> {
+    const { error } = await this.supabaseService.client.rpc('eliminar_propia_cuenta');
+    if (error) throw error;
+    this.currentUser.set(null);
+  }
+
   // Cerrar Sesión
   async logout(): Promise<void> {
     const { error } = await this.supabaseService.client.auth.signOut();

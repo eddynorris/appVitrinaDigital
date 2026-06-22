@@ -4,9 +4,7 @@ import { SupabaseService, Producto } from '../../core/services/supabase.service'
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import {
   LucideArrowRight,
-  LucideSparkles,
-  LucideAward,
-  LucideQuote
+  LucideSparkles
 } from '@lucide/angular';
 
 @Component({
@@ -15,9 +13,7 @@ import {
     RouterLink,
     ProductCardComponent,
     LucideArrowRight,
-    LucideSparkles,
-    LucideAward,
-    LucideQuote
+    LucideSparkles
   ],
   template: `
     <div class="home-page">
@@ -28,11 +24,11 @@ import {
         <div class="container hero-container animate-fade-in">
           <div class="hero-badge-premium">
             <svg lucideSparkles class="badge-icon"></svg>
-            <span>Vitrina de Emprendimiento Técnico</span>
+            <span>Vitrina de Emprendimiento</span>
           </div>
           <h1 class="hero-title-premium">Talento escolar que<br><span class="gradient-text">trasciende generaciones</span></h1>
           <p class="hero-subtitle-premium">
-            Descubre y adquiere piezas artesanales únicas creadas por estudiantes de secundaria técnica de La Victoria. Apoya su aprendizaje, innovación y desarrollo sostenible.
+            Descubre y adquiere piezas únicas creadas por estudiantes de secundaria técnica de La Victoria. Apoya su aprendizaje, innovación y desarrollo sostenible.
           </p>
           <div class="hero-actions">
             <a routerLink="/catalogo" class="btn btn-primary-gradient hero-btn">
@@ -731,10 +727,10 @@ export class HomeComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      const items = await this.supabaseService.getProductos({
+      const res = await this.supabaseService.getProductos({
         estado: 'publicado'
       });
-      this.featuredProducts.set(items.slice(0, 4));
+      this.featuredProducts.set(res.products.slice(0, 4));
     } catch (err) {
       console.error('Error al cargar colección destacada de Supabase:', err);
     } finally {

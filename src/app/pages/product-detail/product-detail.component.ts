@@ -126,9 +126,9 @@ import {
               <p class="safety-text">
                 Para proteger la privacidad de nuestras alumnas menores de edad, las consultas de compra son gestionadas directamente por el docente tutor asignado al proyecto.
               </p>
-              @if (prod.perfiles?.rol !== 'alumno') {
+              @if (getTutorContacto(prod); as tutor) {
                 <div class="tutor-info">
-                  <strong>Docente Encargado:</strong> {{ prod.perfiles?.nombre_completo }}
+                  <strong>Docente Encargado:</strong> {{ tutor.nombre_completo }}
                 </div>
               } @else {
                 <div class="tutor-info" style="color: #ef4444; font-weight: 600;">
@@ -138,9 +138,9 @@ import {
             </div>
 
             <!-- Botón de WhatsApp Dinámico y Seguro -->
-            @if (prod.perfiles?.whatsapp_contacto && prod.perfiles?.rol !== 'alumno') {
+            @if (getTutorContacto(prod); as tutor) {
               <a 
-                [href]="getWhatsAppUrl(prod, prod.perfiles!.whatsapp_contacto)" 
+                [href]="getWhatsAppUrl(prod, tutor.whatsapp_contacto)" 
                 target="_blank" 
                 class="btn btn-success btn-whatsapp-purchase"
               >
@@ -238,7 +238,7 @@ import {
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       opacity: 0;
       transition: opacity 0.4s ease;
       z-index: 2;
@@ -451,6 +451,9 @@ import {
       .product-title {
         font-size: 1.75rem;
       }
+      .info-container {
+        padding: 1.25rem;
+      }
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -462,6 +465,16 @@ export class ProductDetailComponent implements OnInit {
   readonly producto = signal<Producto | null>(null);
   readonly loading = signal<boolean>(true);
   readonly error = signal<string | null>(null);
+
+  getTutorContacto(prod: Producto): { nombre_completo: string; whatsapp_contacto: string; rol?: string } | null {
+    if (prod.perfiles && prod.perfiles.rol !== 'alumno' && prod.perfiles.whatsapp_contacto) {
+      return prod.perfiles;
+    }
+    if (prod.creador && prod.creador.tutor && prod.creador.tutor.rol !== 'alumno' && prod.creador.tutor.whatsapp_contacto) {
+      return prod.creador.tutor;
+    }
+    return null;
+  }
   
   readonly activeImage = signal<string>('');
   readonly imageLoaded = signal<boolean>(false);
@@ -515,7 +528,6 @@ export class ProductDetailComponent implements OnInit {
     const message = 
       `¡Hola! Estoy interesado en un producto de la Vitrina Digital:\n\n` +
       `*Producto:* ${prod.nombre}\n` +
-      `*Código:* ${prod.id}\n` +
       `*Colegio:* ${prod.instituciones?.nombre || 'No especificado'}\n` +
       `*Precio:* S/. ${prod.precio.toFixed(2)}\n\n` +
       `Quisiera consultar si se encuentra disponible y los detalles para realizar la entrega. ¡Muchas gracias!`;

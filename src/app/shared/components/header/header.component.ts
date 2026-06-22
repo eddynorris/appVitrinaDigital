@@ -1,8 +1,8 @@
 import { Component, inject, signal, ChangeDetectionStrategy, effect } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { AlertService } from '../../../core/services/alert.service';
 import { 
-  LucideGraduationCap, 
   LucideLayoutDashboard, 
   LucideLogOut, 
   LucideLogIn, 
@@ -15,7 +15,6 @@ import {
   selector: 'app-header',
   imports: [
     RouterLink,
-    LucideGraduationCap,
     LucideLayoutDashboard,
     LucideLogOut,
     LucideLogIn,
@@ -27,12 +26,12 @@ import {
     <header class="header-nav">
       <div class="container header-container">
         <a routerLink="/" class="logo-link">
-          <svg lucideGraduationCap class="logo-icon"></svg>
+          <img src="/logo.jpg" alt="Logo" class="logo-img" />
           <span class="logo-text">Vitrina <span class="accent-text">Victoria</span></span>
         </a>
 
         <nav class="nav-links">
-          <a routerLink="/catalogo" class="nav-item">Catálogo</a>
+          <a routerLink="/catalogo" class="nav-item catalog-link">Catálogo</a>
           
           @if (authService.currentUser(); as user) {
             <a routerLink="/dashboard" class="nav-item dashboard-link">
@@ -107,10 +106,11 @@ import {
       text-decoration: none;
       color: var(--text-primary);
     }
-    .logo-icon {
-      width: 32px;
-      height: 32px;
-      color: var(--primary-color);
+    .logo-img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: var(--radius-sm);
     }
     .logo-text {
       font-family: var(--font-heading);
@@ -260,8 +260,14 @@ import {
       .nav-item {
         display: none; /* Ocultar menú en móvil para simplificar */
       }
+      .catalog-link {
+        display: inline-flex; /* Mantener Catálogo visible */
+        font-size: 0.85rem;
+      }
       .dashboard-link {
         display: flex;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.6rem;
       }
       .logo-text {
         font-size: 1.15rem;
@@ -271,12 +277,38 @@ import {
         padding: 0.4rem 0.6rem;
       }
     }
+    @media (max-width: 480px) {
+      .logo-text {
+        font-size: 1rem;
+      }
+      .logo-img {
+        width: 28px;
+        height: 28px;
+      }
+      .nav-links {
+        gap: 0.5rem;
+      }
+      .btn-login {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.5rem;
+      }
+      .user-badge {
+        padding: 0.25rem 0.5rem;
+      }
+      .user-name {
+        font-size: 0.75rem;
+      }
+      .user-role {
+        display: none; /* Ocultar rol para ahorrar espacio en móvil muy pequeño */
+      }
+    }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {
   authService = inject(AuthService);
   private router = inject(Router);
+  private alertService = inject(AlertService);
 
   isDarkMode = signal<boolean>(false);
   isDropdownOpen = signal<boolean>(false);
@@ -320,12 +352,24 @@ export class HeaderComponent {
   }
 
   async logout() {
+    const confirmacion = await this.alertService.confirm({
+      title: '¿Cerrar sesión?',
+      message: '¿Estás seguro de que deseas salir de tu cuenta?',
+      confirmText: 'Sí, salir',
+      cancelText: 'Cancelar',
+      type: 'warning'
+    });
+
+    if (!confirmacion) return;
+
     try {
       await this.authService.logout();
       this.isDropdownOpen.set(false);
+      this.alertService.success('Sesión cerrada correctamente.');
       this.router.navigate(['/']);
     } catch (err) {
       console.error(err);
+      this.alertService.error('Ocurrió un error al intentar cerrar sesión.');
     }
   }
 }

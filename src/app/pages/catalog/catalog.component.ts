@@ -12,7 +12,6 @@ import {
   LucideSprout, 
   LucidePackage, 
   LucideInbox,
-  LucideSparkles,
   LucideFilter
 } from '@lucide/angular';
 
@@ -30,7 +29,6 @@ import {
     LucideSprout, 
     LucidePackage, 
     LucideInbox,
-    LucideSparkles,
     LucideFilter
   ],
   template: `
@@ -148,6 +146,44 @@ import {
               <app-product-card [producto]="prod" />
             }
           </div>
+
+          <!-- Controles de Paginación -->
+          @if (totalCount() > pageSize()) {
+            <div class="pagination-container glass-panel animate-fade-in">
+              <span class="pagination-info">
+                Mostrando {{ minRange }} a {{ maxRange }} de {{ totalCount() }} creaciones
+              </span>
+              <div class="pagination-buttons">
+                <button 
+                  class="btn-pagination" 
+                  [disabled]="currentPage() === 1"
+                  (click)="changePage(currentPage() - 1)"
+                  aria-label="Página anterior"
+                >
+                  &laquo; Anterior
+                </button>
+                
+                @for (p of getPagesArray(); track p) {
+                  <button 
+                    class="btn-pagination-num" 
+                    [class.active]="p === currentPage()"
+                    (click)="changePage(p)"
+                  >
+                    {{ p }}
+                  </button>
+                }
+                
+                <button 
+                  class="btn-pagination" 
+                  [disabled]="currentPage() === totalPages"
+                  (click)="changePage(currentPage() + 1)"
+                  aria-label="Página siguiente"
+                >
+                  Siguiente &raquo;
+                </button>
+              </div>
+            </div>
+          }
         }
       </section>
     </div>
@@ -416,6 +452,13 @@ import {
       display: none;
     }
 
+    @media (min-width: 768px) {
+      .categories-carousel-premium {
+        flex-wrap: wrap;
+        overflow-x: visible;
+      }
+    }
+
     .category-pill-premium {
       display: inline-flex;
       align-items: center;
@@ -601,6 +644,88 @@ import {
     }
 
 
+    /* Paginación Profesional */
+    .pagination-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      background: var(--glass-bg);
+      position: relative;
+      z-index: 10;
+    }
+    .pagination-info {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .pagination-buttons {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .btn-pagination {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-pagination:hover:not(:disabled) {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary-color);
+    }
+    .btn-pagination:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-pagination-num {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast);
+    }
+    .btn-pagination-num:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border-color: var(--border-color);
+    }
+    .btn-pagination-num.active {
+      background: var(--primary-color);
+      color: #ffffff;
+      border-color: var(--primary-color);
+      box-shadow: 0 4px 12px rgba(192, 142, 77, 0.25);
+    }
+    @media (max-width: 576px) {
+      .pagination-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+    }
+
     /* RESPONSIVE */
     @media (max-width: 768px) {
       .catalog-hero {
@@ -627,6 +752,9 @@ export class CatalogComponent implements OnInit {
   readonly searchQuery = signal<string>('');
   readonly selectedSchool = signal<string>('');
   readonly selectedCategory = signal<string>('');
+  readonly currentPage = signal<number>(1);
+  readonly pageSize = signal<number>(8);
+  readonly totalCount = signal<number>(0);
   
   readonly products = signal<Producto[]>([]);
   readonly loadingProducts = signal<boolean>(true);
@@ -637,8 +765,24 @@ export class CatalogComponent implements OnInit {
   private activeRequestId = 0;
   private searchTimeout: any;
 
+  get totalPages(): number {
+    return Math.ceil(this.totalCount() / this.pageSize());
+  }
+
+  get minRange(): number {
+    return (this.currentPage() - 1) * this.pageSize() + 1;
+  }
+
+  get maxRange(): number {
+    return Math.min(this.currentPage() * this.pageSize(), this.totalCount());
+  }
+
   constructor() {
     effect(() => {
+      this.searchQuery();
+      this.selectedSchool();
+      this.selectedCategory();
+      this.currentPage();
       this.cargarProductos();
     }, { allowSignalWrites: true });
   }
@@ -662,14 +806,17 @@ export class CatalogComponent implements OnInit {
     this.loadingProducts.set(true);
     
     try {
-      const items = await this.supabaseService.getProductos({
+      const res = await this.supabaseService.getProductos({
         searchQuery: this.searchQuery(),
         institucionId: this.selectedSchool(),
-        categoriaId: this.selectedCategory()
+        categoriaId: this.selectedCategory(),
+        page: this.currentPage(),
+        pageSize: this.pageSize()
       });
       
       if (requestId === this.activeRequestId) {
-        this.products.set(items);
+        this.products.set(res.products);
+        this.totalCount.set(res.totalCount);
       }
     } catch (err) {
       if (requestId === this.activeRequestId) {
@@ -678,6 +825,35 @@ export class CatalogComponent implements OnInit {
     } finally {
       if (requestId === this.activeRequestId) {
         this.loadingProducts.set(false);
+      }
+    }
+  }
+
+  getPagesArray(): number[] {
+    const total = this.totalPages;
+    const current = this.currentPage();
+    if (total <= 5) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, current + 2);
+    if (current <= 3) {
+      end = 5;
+    } else if (current >= total - 2) {
+      start = total - 4;
+    }
+    const pages = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage.set(page);
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
   }
@@ -691,9 +867,11 @@ export class CatalogComponent implements OnInit {
 
     if (!value) {
       this.searchQuery.set('');
+      this.currentPage.set(1);
     } else {
       this.searchTimeout = setTimeout(() => {
         this.searchQuery.set(value);
+        this.currentPage.set(1);
       }, 300);
     }
   }
@@ -701,10 +879,12 @@ export class CatalogComponent implements OnInit {
   onSchoolChange(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
     this.selectedSchool.set(value);
+    this.currentPage.set(1);
   }
 
   selectCategory(categoryId: string) {
     this.selectedCategory.set(categoryId);
+    this.currentPage.set(1);
   }
 
   getEmoji(slug: string): string {

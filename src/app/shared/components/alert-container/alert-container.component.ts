@@ -301,12 +301,29 @@ import {
       font-size: 0.95rem;
       color: var(--text-secondary, #5e5e5e);
       line-height: 1.5;
+      white-space: pre-wrap;
+      text-align: left;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     .modal-actions-area {
       display: flex;
       gap: 0.75rem;
       width: 100%;
+    }
+
+    @media (max-width: 480px) {
+      .modal-card {
+        padding: 1.75rem 1.25rem;
+      }
+      .modal-actions-area {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .btn-modal {
+        width: 100%;
+      }
     }
 
     .btn-modal {
@@ -387,6 +404,88 @@ import {
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
+    }
+
+    /* --- DARK MODE ALERTS OVERRIDES --- */
+    [data-theme="dark"] .toast-card {
+      background: rgba(36, 24, 16, 0.85);
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+    [data-theme="dark"] .toast-card.success {
+      background: rgba(22, 163, 74, 0.15);
+      border-color: rgba(22, 163, 74, 0.3);
+      border-left: 5px solid #22c55e;
+    }
+    [data-theme="dark"] .toast-card.error {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.3);
+      border-left: 5px solid #f87171;
+    }
+    [data-theme="dark"] .toast-card.warning {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: rgba(245, 158, 11, 0.3);
+      border-left: 5px solid #fbbf24;
+    }
+    [data-theme="dark"] .toast-card.info {
+      background: rgba(59, 130, 246, 0.15);
+      border-color: rgba(59, 130, 246, 0.3);
+      border-left: 5px solid #60a5fa;
+    }
+    [data-theme="dark"] .toast-message {
+      color: #f3ebe4;
+    }
+    [data-theme="dark"] .toast-close-btn {
+      color: rgba(243, 235, 228, 0.6);
+    }
+    [data-theme="dark"] .toast-close-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+    [data-theme="dark"] .modal-card {
+      background: rgba(36, 24, 16, 0.95);
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+    }
+    [data-theme="dark"] .modal-close-x {
+      color: rgba(243, 235, 228, 0.6);
+    }
+    [data-theme="dark"] .modal-close-x:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+    [data-theme="dark"] .modal-title {
+      color: #ffffff;
+    }
+    [data-theme="dark"] .modal-message {
+      color: rgba(243, 235, 228, 0.8);
+    }
+    [data-theme="dark"] .modal-card.danger .modal-type-icon {
+      background: rgba(239, 68, 68, 0.15);
+    }
+    [data-theme="dark"] .modal-card.warning .modal-type-icon {
+      background: rgba(217, 119, 6, 0.15);
+    }
+    [data-theme="dark"] .modal-card.primary .modal-type-icon {
+      background: rgba(192, 142, 77, 0.15);
+    }
+    [data-theme="dark"] .btn-modal-cancel {
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(243, 235, 228, 0.8);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+    [data-theme="dark"] .btn-modal-cancel:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+    }
+    [data-theme="dark"] .btn-modal-primary {
+      background: var(--primary-color);
+      color: #1c120c;
+      font-weight: 700;
+    }
+    [data-theme="dark"] .btn-modal-primary:hover {
+      background: var(--text-primary);
+      color: #1c120c;
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush

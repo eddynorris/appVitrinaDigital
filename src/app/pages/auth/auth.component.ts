@@ -440,6 +440,17 @@ import {
         display: none; /* Se muestra la versión grande al lado izquierdo */
       }
     }
+    @media (max-width: 480px) {
+      .auth-card-wrapper {
+        padding: 2rem 1.25rem;
+      }
+      .auth-title {
+        font-size: 1.5rem;
+      }
+      .auth-form-side {
+        padding: 1.5rem 1rem;
+      }
+    }
 
     .logo-icon {
       width: 32px;

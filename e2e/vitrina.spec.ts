@@ -7,20 +7,20 @@ test.describe('Vitrina Digital Escolar - Pruebas E2E', () => {
   test('Debería navegar por la web pública y el catálogo', async ({ page }) => {
     // 1. Visitar la página de inicio
     await page.goto('/');
-    await expect(page).toHaveTitle(/Colegio de Artes - Vitrina Victoria/);
-    await expect(page.locator('h1.hero-title-light')).toContainText('Talento que trasciende generaciones');
+    await expect(page).toHaveTitle(/Vitrina Digital La Victoria/);
+    await expect(page.locator('h1.hero-title-premium')).toContainText('Talento escolar que');
 
     // 2. Navegar al Catálogo
-    await page.click('text=VER COLECCIÓN');
+    await page.click('text=EXPLORAR COLECCIÓN');
     await page.waitForURL('/catalogo');
-    await expect(page).toHaveTitle(/Catálogo de Emprendimiento - Vitrina Victoria/);
+    await expect(page).toHaveTitle(/Catálogo de Emprendimiento/);
 
     // 3. Buscar un producto que no existe y verificar estado vacío
-    const searchInput = page.locator('input.search-input');
+    const searchInput = page.locator('input.form-input-premium');
     await searchInput.fill('ProductoInexistenteTotalmenteFicticio');
     // Esperar debounce
     await page.waitForTimeout(500);
-    await expect(page.locator('.empty-state h3')).toContainText('No se encontraron productos');
+    await expect(page.locator('.empty-state-premium h3')).toContainText('No se encontraron creaciones');
 
     // 4. Limpiar búsqueda
     await searchInput.fill('');
@@ -32,14 +32,17 @@ test.describe('Vitrina Digital Escolar - Pruebas E2E', () => {
     await page.goto('/auth');
     await expect(page.locator('.auth-title')).toContainText('Acceso Educativo');
 
+    // Activar formulario alternativo de correo
+    await page.click('button:has-text("Ingreso alternativo con correo")');
+
     // 2. Login fallido
     await page.fill('#email', 'correo-invalido@test.com');
     await page.fill('#password', 'ClaveFalsa123');
     await page.click('button[type="submit"]');
     
     // Verificar alerta de error
-    await expect(page.locator('.error-alert')).toBeVisible();
-    await expect(page.locator('.error-alert span')).toContainText('Correo electrónico o contraseña incorrectos.');
+    await expect(page.locator('.error-alert-box')).toBeVisible();
+    await expect(page.locator('.error-message')).toContainText('Correo electrónico o contraseña incorrectos.');
 
     // 3. Login exitoso con credenciales del usuario
     await page.fill('#email', TEST_CREDENTIALS.email);
@@ -48,7 +51,7 @@ test.describe('Vitrina Digital Escolar - Pruebas E2E', () => {
 
     // Redirección al panel
     await page.waitForURL('/dashboard');
-    await expect(page).toHaveTitle(/Panel de Control - Vitrina Victoria/);
+    await expect(page).toHaveTitle(/Panel de Control/);
     await expect(page.locator('.header-user-info h2')).toContainText('Panel de Administración');
   });
 
@@ -56,14 +59,9 @@ test.describe('Vitrina Digital Escolar - Pruebas E2E', () => {
     const productName = `Test Product ${Date.now()}`;
     const editedProductName = `${productName} Editado`;
 
-    // Escuchar diálogos de confirmación (para la eliminación) y aceptarlos
-    page.on('dialog', async dialog => {
-      expect(dialog.message()).toContain('¿Estás seguro de que deseas eliminar este producto?');
-      await dialog.accept();
-    });
-
     // 1. Iniciar sesión directamente
     await page.goto('/auth');
+    await page.click('button:has-text("Ingreso alternativo con correo")');
     await page.fill('#email', TEST_CREDENTIALS.email);
     await page.fill('#password', TEST_CREDENTIALS.password);
     await page.click('button[type="submit"]');
@@ -134,11 +132,11 @@ test.describe('Vitrina Digital Escolar - Pruebas E2E', () => {
     }
     
     // Guardar cambios
-    await page.click('button[type="submit"]');
+    await page.click('button[type="submit"]:has-text("Guardar Perfil")');
     
-    // Verificar alerta de éxito
-    await expect(page.locator('.success-alert')).toBeVisible();
-    await expect(page.locator('.success-alert span')).toContainText('¡Perfil actualizado con éxito!');
+    // Verificar alerta de éxito toast
+    await expect(page.locator('.toast-card.success')).toBeVisible();
+    await expect(page.locator('.toast-message')).toContainText('¡Perfil actualizado con éxito!');
     
     // Verificar que el nombre en el badge se actualizó a "Eddy"
     await expect(page.locator('.user-badge .user-name')).toContainText('Eddy');
@@ -148,11 +146,11 @@ test.describe('Vitrina Digital Escolar - Pruebas E2E', () => {
     if (await whatsappInput.isVisible()) {
       await whatsappInput.fill('+51'); // O dejarlo en blanco/+51
     }
-    await page.click('button[type="submit"]');
-    await expect(page.locator('.success-alert')).toBeVisible();
+    await page.click('button[type="submit"]:has-text("Guardar Perfil")');
+    await expect(page.locator('.toast-card.success')).toBeVisible();
 
     // ==========================================
-    // D. ELIMINAR PRODUCTO (CRUD de eliminación)
+    // D. ELIMINAR PRODUCTO (CRUD de eliminación con modal personalizado)
     // ==========================================
     await page.click('a:has-text("Volver al Panel")');
     await page.waitForURL('/dashboard');
@@ -163,28 +161,29 @@ test.describe('Vitrina Digital Escolar - Pruebas E2E', () => {
     // Hacer clic en eliminar
     await finalProductRow.locator('.btn-action-delete').click();
     
+    // Confirmar en el modal personalizado
+    await page.click('button.btn-modal-danger');
+    
     // Verificar que desapareció de la lista
     await expect(finalProductRow).not.toBeVisible();
 
     // ==========================================
-    // E. CERRAR SESIÓN
+    // E. CERRAR SESIÓN (con modal de confirmación personalizado)
     // ==========================================
     await page.click('.user-badge');
     await page.click('button:has-text("Cerrar Sesión")');
+    
+    // Confirmar en el modal personalizado
+    await page.click('button.btn-modal-warning');
+    
     await page.waitForURL('/');
     await expect(page.locator('.btn-login')).toBeVisible();
   });
 
   test('Debería permitir la gestión de instituciones (CRUD) y el cambio de contraseña para administradores', async ({ page }) => {
-    // Escuchar diálogos de confirmación (para la eliminación de colegio) y aceptarlos
-    page.on('dialog', async dialog => {
-      if (dialog.message().includes('¿Estás seguro de que deseas eliminar este colegio?')) {
-        await dialog.accept();
-      }
-    });
-
     // 1. Iniciar sesión directamente como administrador
     await page.goto('/auth');
+    await page.click('button:has-text("Ingreso alternativo con correo")');
     await page.fill('#email', TEST_CREDENTIALS.email);
     await page.fill('#password', TEST_CREDENTIALS.password);
     await page.click('button[type="submit"]');
@@ -267,18 +266,18 @@ test.describe('Vitrina Digital Escolar - Pruebas E2E', () => {
     await page.fill('#confirmar_contrasena', tempPassword);
     await btnChangePass.click();
 
-    // Verificar éxito
-    const successAlert = page.locator('.success-alert:has-text("¡Contraseña actualizada con éxito!")');
-    await expect(successAlert).toBeVisible();
+    // Verificar éxito toast
+    const successToast = page.locator('.toast-card.success:has-text("¡Contraseña actualizada con éxito!")');
+    await expect(successToast).toBeVisible();
 
     // Restaurar contraseña original inmediatamente para no alterar futuros accesos/tests
     await page.fill('#nueva_contrasena', TEST_CREDENTIALS.password);
     await page.fill('#confirmar_contrasena', TEST_CREDENTIALS.password);
     await btnChangePass.click();
-    await expect(successAlert).toBeVisible();
+    await expect(successToast).toBeVisible();
 
     // ==========================================
-    // D. ELIMINAR COLEGIO (Limpieza de datos)
+    // D. ELIMINAR COLEGIO (Limpieza de datos con modal personalizado)
     // ==========================================
     await page.goto('/dashboard/instituciones');
     await page.waitForSelector('.schools-table', { timeout: 10000 });
@@ -286,6 +285,9 @@ test.describe('Vitrina Digital Escolar - Pruebas E2E', () => {
     await expect(rowToDelete).toBeVisible();
 
     await rowToDelete.locator('.btn-action-delete').click();
+    
+    // Confirmar en el modal personalizado
+    await page.click('button.btn-modal-danger');
 
     // Verificar que desapareció
     await expect(rowToDelete).not.toBeVisible();
