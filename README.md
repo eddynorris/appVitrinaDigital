@@ -1,59 +1,71 @@
-# AppLaVictoria
+# App La Victoria
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.12.
+Vitrina digital de emprendimiento escolar: muestra y vende los productos creados por estudiantes de colegios de La Victoria (Abancay-Apurímac), como artesanía, textiles, repostería, joyería y horticultura. Incluye catálogo público con búsqueda y filtros, página de inicio, detalle de producto, autenticación, perfil y un panel para que las instituciones administren sus productos.
 
-## Development server
+## Características principales
 
-To start a local development server, run:
+- Página de inicio con hero, historia del proyecto y colección destacada.
+- Catálogo público de productos con búsqueda, filtros por colegio y categoría, y paginación.
+- Tarjetas de producto reutilizables y detalle de producto.
+- Autenticación (login/registro) y gestión de perfil.
+- Panel (dashboard) para instituciones con administración de productos.
+- Páginas legales (términos y privacidad).
+- Backend de datos con Supabase.
+
+## Tecnologías
+
+- Angular 21 (standalone components, signals)
+- RxJS
+- Supabase (@supabase/supabase-js)
+- Lucide (iconos)
+- TypeScript
+- Vitest (unit tests)
+- Playwright (e2e)
+
+## Requisitos previos
+
+- Node.js 20 o superior
+- Angular CLI (`npm install -g @angular/cli`)
+
+## Cómo ejecutar
 
 ```bash
+npm install
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+El servidor de desarrollo estará disponible en `http://localhost:4200/`.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Compilar
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Los artefactos de producción se generan en el directorio `dist/`.
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Pruebas
 
 ```bash
-ng test
+ng test        # unit tests (Vitest)
+npm run test:e2e  # pruebas end-to-end (Playwright)
 ```
 
-## Running end-to-end tests
+## Estructura del proyecto
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
 ```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+src/app/
+├── core/          # Guards, servicios y configuración global
+│   ├── config/        # Configuración
+│   ├── guards/        # Protección de rutas
+│   └── services/      # Supabase, autenticación, productos
+├── pages/
+│   ├── home/          # Página de inicio
+│   ├── catalog/       # Catálogo de productos
+│   ├── product-detail/ # Detalle de producto
+│   ├── auth/          # Login y registro
+│   ├── perfil/        # Perfil del usuario
+│   ├── dashboard/     # Panel de instituciones
+│   └── legal/         # Términos y privacidad
+└── shared/        # Componentes reutilizables (header, footer, product-card)
+```
